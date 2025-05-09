@@ -22,8 +22,6 @@ import {
   Star,
   MessageSquare,
   User,
-  ThumbsUp,
-  ThumbsDown,
   ChevronRight,
 } from "lucide-react";
 import { formatCurrency, formatDate, formatTime } from "@/lib/formatters";
@@ -191,10 +189,6 @@ export default function EventDetailsPage({
   params: { id: string };
 }) {
   const [expandedReviews, setExpandedReviews] = useState<string[]>([]);
-  const [helpfulReviews, setHelpfulReviews] = useState<Record<string, string>>(
-    {}
-  );
-
   console.log(params);
 
   // In a real app, you would fetch the event details based on the ID
@@ -222,14 +216,6 @@ export default function EventDetailsPage({
         ? prev.filter((id) => id !== reviewId)
         : [...prev, reviewId]
     );
-  };
-
-  // Handle helpful/not helpful votes
-  const handleHelpfulVote = (reviewId: string, isHelpful: boolean) => {
-    setHelpfulReviews((prev) => ({
-      ...prev,
-      [reviewId]: isHelpful ? "helpful" : "not-helpful",
-    }));
   };
 
   // Calculate average rating
@@ -465,7 +451,6 @@ export default function EventDetailsPage({
                         const commentLength = review.comment.length;
                         const shouldTruncate =
                           commentLength > 150 && !isExpanded;
-                        const helpfulStatus = helpfulReviews[review.id];
 
                         return (
                           <div
@@ -549,59 +534,6 @@ export default function EventDetailsPage({
                                   )}
                                 </>
                               )}
-                            </div>
-
-                            <div className="flex items-center justify-between pt-2">
-                              <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                                <span>Was this review helpful?</span>
-                                <div className="flex items-center gap-3">
-                                  <button
-                                    className={cn(
-                                      "flex items-center gap-1 hover:text-foreground transition-colors",
-                                      helpfulStatus === "helpful" &&
-                                        "text-primary font-medium"
-                                    )}
-                                    onClick={() =>
-                                      handleHelpfulVote(review.id, true)
-                                    }
-                                  >
-                                    <ThumbsUp className="h-3.5 w-3.5" />
-                                    <span>
-                                      Yes (
-                                      {review.helpful_count +
-                                        (helpfulStatus === "helpful" ? 1 : 0)}
-                                      )
-                                    </span>
-                                  </button>
-                                  <button
-                                    className={cn(
-                                      "flex items-center gap-1 hover:text-foreground transition-colors",
-                                      helpfulStatus === "not-helpful" &&
-                                        "text-destructive font-medium"
-                                    )}
-                                    onClick={() =>
-                                      handleHelpfulVote(review.id, false)
-                                    }
-                                  >
-                                    <ThumbsDown className="h-3.5 w-3.5" />
-                                    <span>
-                                      No (
-                                      {review.not_helpful_count +
-                                        (helpfulStatus === "not-helpful"
-                                          ? 1
-                                          : 0)}
-                                      )
-                                    </span>
-                                  </button>
-                                </div>
-                              </div>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-7 text-xs"
-                              >
-                                Report
-                              </Button>
                             </div>
                           </div>
                         );

@@ -14,7 +14,7 @@ export default function CTA() {
             Ready to Create Your First Event?
           </h2>
           <p className="text-muted-foreground max-w-2xl">
-            Join thousands of event organizers who trust EventHub to create
+            Join thousands of event organizers who trust EventCraft to create
             memorable experiences.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 pt-2">

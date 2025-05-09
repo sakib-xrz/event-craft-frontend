@@ -26,10 +26,13 @@ import Container from "./container";
 // Mock data - in a real app, this would come from your auth/state management
 const isLoggedIn = true;
 const user = {
+  id: "user1",
   name: "Alex Johnson",
   email: "alex@example.com",
+  avatar: null,
   role: "USER",
   notifications: 3,
+  invitations: 2,
 };
 
 export default function Navbar() {
@@ -145,7 +148,7 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              <Link href="/dashboard/notifications">
+              <Link href="/">
                 <Button variant="ghost" size="icon" className="relative">
                   <Bell className="h-5 w-5" />
                   <span className="sr-only">Notifications</span>
@@ -173,14 +176,13 @@ export default function Navbar() {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem className="cursor-pointer" asChild>
-                    <Link href="/dashboard">Dashboard</Link>
+                    <Link href="/">Profile</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" asChild>
-                    <Link href="/dashboard/events">My Events</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" asChild>
-                    <Link href="/dashboard/invitations">Invitations</Link>
-                  </DropdownMenuItem>
+                  {user.role === "USER" && (
+                    <DropdownMenuItem className="cursor-pointer" asChild>
+                      <Link href="/dashboard">Dashboard</Link>
+                    </DropdownMenuItem>
+                  )}
                   {user.role === "ADMIN" && (
                     <DropdownMenuItem className="cursor-pointer" asChild>
                       <Link href="/admin">Admin Panel</Link>
