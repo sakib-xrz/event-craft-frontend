@@ -43,7 +43,7 @@ export default function EventCard({ event, featured = false }: EventCardProps) {
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40"></div>
 
       {/* Event type indicators */}
-      <div className="absolute top-4 left-4 flex flex-wrap gap-1 z-10">
+      <div className="absolute top-4 right-4 flex flex-wrap gap-1 z-10">
         {isHappeningSoon && (
           <Badge
             variant="default"

@@ -10,7 +10,7 @@ export default function Footer() {
           <div className="space-y-3">
             <div className="flex items-center space-x-2">
               <Calendar className="h-6 w-6 text-primary" />
-              <span className="font-bold text-xl">EventCraft</span>
+              <span className="font-bold text-xl text-primary">EventCraft</span>
             </div>
             <p className="text-sm text-muted-foreground">
               Your all-in-one platform for event planning and participation.
@@ -91,15 +91,15 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li className="flex items-center gap-2 text-muted-foreground">
                 <Mail className="h-4 w-4 text-primary" />
-                <span>support@eventhub.com</span>
+                <span>support@eventcraft.com</span>
               </li>
               <li className="flex items-center gap-2 text-muted-foreground">
                 <Phone className="h-4 w-4 text-primary" />
-                <span>+1 (555) 123-4567</span>
+                <span>+8801540581443</span>
               </li>
               <li className="flex items-center gap-2 text-muted-foreground">
                 <MapPin className="h-4 w-4 text-primary" />
-                <span>123 Event Street, City</span>
+                <span>Dhaka, Bangladesh</span>
               </li>
             </ul>
           </div>
