@@ -101,7 +101,7 @@ export default async function Image() {
               background:
                 "linear-gradient(to right, #14998a, #1dd4c0, #18b3a3)",
               backgroundClip: "text",
-              color: "transparent",
+              color: "white",
             }}
           >
             EventCraft
