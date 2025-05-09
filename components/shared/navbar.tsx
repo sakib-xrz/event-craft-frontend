@@ -160,7 +160,7 @@ export default function Navbar() {
                 </Button>
               </Link>
               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
+                <DropdownMenuTrigger asChild className="cursor-pointer">
                   <Avatar className="h-8 w-8">
                     <AvatarFallback className="bg-primary/10 text-primary">
                       {user.name
