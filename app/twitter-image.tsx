@@ -16,7 +16,7 @@ export const contentType = "image/png";
 export default async function Image() {
   return new ImageResponse(
     (
-      // Twitter Image (similar to OpenGraph but optimized for Twitter)
+      // OpenGraph Image
       <div
         style={{
           background: "linear-gradient(to right, #14998a, #1dd4c0, #18b3a3)",
@@ -81,8 +81,7 @@ export default async function Image() {
             style={{
               width: "80px",
               height: "80px",
-              background:
-                "linear-gradient(135deg, hsl(174, 77%, 26%), hsl(174, 77%, 36%), hsl(174, 77%, 30%))",
+              background: "linear-gradient(135deg, #14998a, #1dd4c0, #18b3a3)",
               borderRadius: "16px",
               display: "flex",
               alignItems: "center",
@@ -100,7 +99,7 @@ export default async function Image() {
               fontSize: "60px",
               fontWeight: "bold",
               background:
-                "linear-gradient(to right, hsl(174, 77%, 26%), hsl(174, 77%, 36%), hsl(174, 77%, 30%))",
+                "linear-gradient(to right, #14998a, #1dd4c0, #18b3a3)",
               backgroundClip: "text",
               color: "transparent",
             }}
@@ -120,10 +119,10 @@ export default async function Image() {
             maxWidth: "800px",
           }}
         >
-          Your all-in-one event planning platform
+          Plan, Join, Celebrate
         </div>
 
-        {/* Features */}
+        {/* Services */}
         <div
           style={{
             display: "flex",
@@ -135,9 +134,9 @@ export default async function Image() {
             "RSVP Management",
             "Participant Tracking",
             "Reviews & Feedback",
-          ].map((feature) => (
+          ].map((service) => (
             <div
-              key={feature}
+              key={service}
               style={{
                 padding: "12px 24px",
                 background: "rgba(255,255,255,0.1)",
@@ -146,7 +145,7 @@ export default async function Image() {
                 fontSize: "18px",
               }}
             >
-              {feature}
+              {service}
             </div>
           ))}
         </div>

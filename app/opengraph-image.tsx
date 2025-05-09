@@ -81,8 +81,7 @@ export default async function Image() {
             style={{
               width: "80px",
               height: "80px",
-              background:
-                "linear-gradient(135deg, hsl(174, 77%, 26%), hsl(174, 77%, 36%), hsl(174, 77%, 30%))",
+              background: "linear-gradient(135deg, #14998a, #1dd4c0, #18b3a3)",
               borderRadius: "16px",
               display: "flex",
               alignItems: "center",
@@ -100,7 +99,7 @@ export default async function Image() {
               fontSize: "60px",
               fontWeight: "bold",
               background:
-                "linear-gradient(to right, hsl(174, 77%, 26%), hsl(174, 77%, 36%), hsl(174, 77%, 30%))",
+                "linear-gradient(to right, #14998a, #1dd4c0, #18b3a3)",
               backgroundClip: "text",
               color: "transparent",
             }}
