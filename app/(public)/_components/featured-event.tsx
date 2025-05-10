@@ -1,27 +1,16 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import FeaturedEventCard from "./featured-event-card";
 import Container from "@/components/shared/container";
-
-// Mock data for featured event
-const featuredEvent = {
-  id: "1",
-  title: "Tech Conference 2025",
-  description:
-    "Join us for the biggest tech conference of the year featuring industry leaders and innovative workshops.",
-  date_time: new Date("2025-06-15T09:00:00"),
-  venue: "Tech Convention Center, San Francisco",
-  is_public: true,
-  is_paid: true,
-  is_virtual: false,
-  registration_fee: 199.99,
-  organizer: {
-    full_name: "Tech Events Inc.",
-  },
-};
+import { useGetFeaturedEventQuery } from "@/redux/features/event/eventApi";
+import FeaturedEventCardSkeleton from "./featured-event-card-skeleton";
 
 export default function FeaturedEvent() {
+  const { data: featuredEvent, isLoading } = useGetFeaturedEventQuery({});
+
   return (
     <section className="py-12 md:py-16">
       <Container>
@@ -42,7 +31,11 @@ export default function FeaturedEvent() {
           </Link>
         </div>
 
-        <FeaturedEventCard event={featuredEvent} />
+        {isLoading ? (
+          <FeaturedEventCardSkeleton />
+        ) : (
+          <FeaturedEventCard event={featuredEvent?.data} />
+        )}
       </Container>
     </section>
   );
