@@ -39,7 +39,7 @@ const allInvitations = [
     event: {
       id: "3",
       title: "Networking Mixer",
-      date_time: new Date("2025-05-25T18:00:00"),
+      date_time: "2025-05-25T18:00:00",
       venue: "Downtown Business Center",
       is_paid: true,
       registration_fee: 25,
@@ -57,7 +57,7 @@ const allInvitations = [
     event: {
       id: "4",
       title: "Charity Gala",
-      date_time: new Date("2025-08-15T19:00:00"),
+      date_time: "2025-08-15T19:00:00",
       venue: "Grand Hotel Ballroom",
       is_paid: true,
       registration_fee: 150,
@@ -75,7 +75,7 @@ const allInvitations = [
     event: {
       id: "5",
       title: "Tech Startup Pitch Night",
-      date_time: new Date("2025-06-20T18:00:00"),
+      date_time: "2025-06-20T18:00:00",
       venue: "Innovation Hub",
       is_paid: false,
       registration_fee: 0,
@@ -93,7 +93,7 @@ const allInvitations = [
     event: {
       id: "6",
       title: "Photography Workshop",
-      date_time: new Date("2025-07-05T10:00:00"),
+      date_time: "2025-07-05T10:00:00",
       venue: "Art Gallery",
       is_paid: true,
       registration_fee: 75,
@@ -111,7 +111,7 @@ const allInvitations = [
     event: {
       id: "7",
       title: "Marketing Conference",
-      date_time: new Date("2025-09-10T09:00:00"),
+      date_time: "2025-09-10T09:00:00",
       venue: "Convention Center",
       is_paid: true,
       registration_fee: 199,
@@ -133,7 +133,7 @@ const sentInvitations = [
     event: {
       id: "1",
       title: "Tech Conference 2025",
-      date_time: new Date("2025-06-15T09:00:00"),
+      date_time: "2025-06-15T09:00:00",
       venue: "Tech Convention Center, San Francisco",
     },
     recipient: {
@@ -150,7 +150,7 @@ const sentInvitations = [
     event: {
       id: "1",
       title: "Tech Conference 2025",
-      date_time: new Date("2025-06-15T09:00:00"),
+      date_time: "2025-06-15T09:00:00",
       venue: "Tech Convention Center, San Francisco",
     },
     recipient: {
@@ -167,7 +167,7 @@ const sentInvitations = [
     event: {
       id: "2",
       title: "Web Development Workshop",
-      date_time: new Date("2025-05-20T10:00:00"),
+      date_time: "2025-05-20T10:00:00",
       venue: "Online",
     },
     recipient: {
@@ -186,7 +186,7 @@ interface IReceivedInvitation {
   event: {
     id: string;
     title: string;
-    date_time: Date;
+    date_time: string;
     venue: string;
     is_paid: boolean;
     registration_fee: number;
@@ -205,7 +205,7 @@ interface ISentInvitation {
   event: {
     id: string;
     title: string;
-    date_time: Date;
+    date_time: string;
     venue: string;
   };
   recipient: {

@@ -11,11 +11,11 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import type { Event } from "@/lib/types";
+import type { IEvent } from "@/lib/types";
 import { useMobile } from "@/hooks/use-mobile";
 
 interface EventSliderProps {
-  events: Event[];
+  events: IEvent[];
 }
 
 export default function EventSlider({ events }: EventSliderProps) {

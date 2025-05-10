@@ -32,7 +32,7 @@ interface IEvent {
   id: string;
   title: string;
   description: string;
-  date_time: Date;
+  date_time: string;
   venue: string;
   is_public: boolean;
   is_paid: boolean;
@@ -49,7 +49,7 @@ const allEvents = [
     title: "Tech Conference 2025",
     description:
       "Join us for the biggest tech conference of the year featuring industry leaders and innovative workshops.",
-    date_time: new Date("2025-06-15T09:00:00"),
+    date_time: "2025-06-15T09:00:00",
     venue: "Tech Convention Center, San Francisco",
     is_public: true,
     is_paid: true,
@@ -62,7 +62,7 @@ const allEvents = [
     id: "2",
     title: "Web Development Workshop",
     description: "Learn the latest web development techniques and tools.",
-    date_time: new Date("2025-05-20T10:00:00"),
+    date_time: "2025-05-20T10:00:00",
     venue: "Online",
     is_public: true,
     is_paid: false,
@@ -75,7 +75,7 @@ const allEvents = [
     id: "3",
     title: "Networking Mixer",
     description: "Connect with professionals in your industry.",
-    date_time: new Date("2025-05-25T18:00:00"),
+    date_time: "2025-05-25T18:00:00",
     venue: "Downtown Business Center",
     is_public: false,
     is_paid: true,
@@ -88,7 +88,7 @@ const allEvents = [
     id: "4",
     title: "Product Launch Webinar",
     description: "Join us for the exclusive launch of our new product line.",
-    date_time: new Date("2025-04-10T14:00:00"),
+    date_time: "2025-04-10T14:00:00",
     venue: "Online",
     is_public: true,
     is_paid: false,
@@ -101,7 +101,7 @@ const allEvents = [
     id: "5",
     title: "Annual Charity Gala",
     description: "A night of fundraising and entertainment for a good cause.",
-    date_time: new Date("2024-12-15T19:00:00"),
+    date_time: "2024-12-15T19:00:00",
     venue: "Grand Hotel Ballroom",
     is_public: true,
     is_paid: true,

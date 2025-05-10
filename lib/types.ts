@@ -44,7 +44,7 @@ export interface IEvent {
   is_public: boolean;
   is_paid: boolean;
   is_virtual: boolean;
-  registration_fee: string;
+  registration_fee: number;
   organizer: {
     full_name: string;
   };

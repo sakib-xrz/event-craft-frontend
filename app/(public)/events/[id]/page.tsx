@@ -35,7 +35,7 @@ const eventDetails = {
   title: "Tech Conference 2025",
   description:
     "Join us for the biggest tech conference of the year featuring industry leaders and innovative workshops. This multi-day event will cover the latest trends in technology, including AI, blockchain, cloud computing, and more. Network with professionals from leading tech companies and startups.\n\nThe conference includes keynote speeches, panel discussions, hands-on workshops, and networking opportunities. Breakfast and lunch will be provided each day. Don't miss this opportunity to expand your knowledge and grow your professional network.",
-  date_time: new Date("2025-06-15T09:00:00"),
+  date_time: "2025-06-15T09:00:00",
   venue: "Tech Convention Center, San Francisco",
   is_public: false,
   is_paid: false,

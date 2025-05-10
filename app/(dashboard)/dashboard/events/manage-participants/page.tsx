@@ -43,19 +43,19 @@ const events = [
   {
     id: "1",
     title: "Tech Conference 2025",
-    date_time: new Date("2025-06-15T09:00:00"),
+    date_time: "2025-06-15T09:00:00",
     venue: "Tech Convention Center, San Francisco",
   },
   {
     id: "2",
     title: "Web Development Workshop",
-    date_time: new Date("2025-05-20T10:00:00"),
+    date_time: "2025-05-20T10:00:00",
     venue: "Online",
   },
   {
     id: "3",
     title: "Networking Mixer",
-    date_time: new Date("2025-05-25T18:00:00"),
+    date_time: "2025-05-25T18:00:00",
     venue: "Downtown Business Center",
   },
 ];
@@ -67,7 +67,7 @@ interface IParticipant {
   status: string;
   role: string;
   company: string;
-  joinedAt: Date;
+  joinedAt: string;
   avatar: string | null;
   eventId: string;
 }
@@ -81,7 +81,7 @@ const allParticipants = [
     status: "APPROVED",
     role: "Attendee",
     company: "Google",
-    joinedAt: new Date("2025-04-10"),
+    joinedAt: "2025-04-10",
     avatar: null,
     eventId: "1",
   },
@@ -92,7 +92,7 @@ const allParticipants = [
     status: "APPROVED",
     role: "Speaker",
     company: "Microsoft",
-    joinedAt: new Date("2025-04-12"),
+    joinedAt: "2025-04-12",
     avatar: null,
     eventId: "1",
   },
@@ -103,7 +103,7 @@ const allParticipants = [
     status: "PENDING",
     role: "Attendee",
     company: "Amazon",
-    joinedAt: new Date("2025-04-15"),
+    joinedAt: "2025-04-15",
     avatar: null,
     eventId: "1",
   },
@@ -114,7 +114,7 @@ const allParticipants = [
     status: "PENDING",
     role: "Attendee",
     company: "Apple",
-    joinedAt: new Date("2025-04-16"),
+    joinedAt: "2025-04-16",
     avatar: null,
     eventId: "1",
   },
@@ -125,7 +125,7 @@ const allParticipants = [
     status: "BANNED",
     role: "Attendee",
     company: "Tesla",
-    joinedAt: new Date("2025-04-05"),
+    joinedAt: "2025-04-05",
     avatar: null,
     eventId: "1",
   },
@@ -136,7 +136,7 @@ const allParticipants = [
     status: "APPROVED",
     role: "Attendee",
     company: "Facebook",
-    joinedAt: new Date("2025-04-08"),
+    joinedAt: "2025-04-08",
     avatar: null,
     eventId: "2",
   },
@@ -147,7 +147,7 @@ const allParticipants = [
     status: "PENDING",
     role: "Attendee",
     company: "Twitter",
-    joinedAt: new Date("2025-04-14"),
+    joinedAt: "2025-04-14",
     avatar: null,
     eventId: "2",
   },

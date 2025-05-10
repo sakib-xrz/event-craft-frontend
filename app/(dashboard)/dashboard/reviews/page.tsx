@@ -27,7 +27,7 @@ interface Organizer {
 interface Event {
   id: string;
   title: string;
-  date_time: Date;
+  date_time: string;
   organizer: Organizer;
 }
 
@@ -53,7 +53,7 @@ const reviews: Review[] = [
     event: {
       id: "3",
       title: "Networking Mixer",
-      date_time: new Date("2025-05-25T18:00:00"),
+      date_time: "2025-05-25T18:00:00",
       organizer: {
         id: "org1",
         name: "Business Network Group",
@@ -71,7 +71,7 @@ const reviews: Review[] = [
     event: {
       id: "4",
       title: "Product Launch Webinar",
-      date_time: new Date("2025-04-10T14:00:00"),
+      date_time: "2025-04-10T14:00:00",
       organizer: {
         id: "org2",
         name: "Tech Innovations Inc.",
@@ -324,7 +324,7 @@ function ReviewsList({
 
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-muted-foreground">
-                    Posted on {formatDate(review.created_at)}
+                    Posted on {formatDate(review.created_at.toString())}
                   </span>
                 </div>
 

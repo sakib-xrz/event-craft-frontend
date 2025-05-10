@@ -28,7 +28,7 @@ const upcomingEvents = [
   {
     id: "1",
     title: "Tech Conference 2025",
-    date_time: new Date("2025-06-15T09:00:00"),
+    date_time: "2025-06-15T09:00:00",
     venue: "Tech Convention Center, San Francisco",
     participants: 45,
     capacity: 100,
@@ -36,7 +36,7 @@ const upcomingEvents = [
   {
     id: "2",
     title: "Web Development Workshop",
-    date_time: new Date("2025-05-20T10:00:00"),
+    date_time: "2025-05-20T10:00:00",
     venue: "Online",
     participants: 28,
     capacity: 50,
@@ -49,7 +49,7 @@ const pendingInvitations = [
     event: {
       id: "3",
       title: "Networking Mixer",
-      date_time: new Date("2025-05-25T18:00:00"),
+      date_time: "2025-05-25T18:00:00",
     },
     sender: {
       name: "Sarah Williams",
@@ -60,7 +60,7 @@ const pendingInvitations = [
     event: {
       id: "4",
       title: "Charity Gala",
-      date_time: new Date("2025-08-15T19:00:00"),
+      date_time: "2025-08-15T19:00:00",
     },
     sender: {
       name: "Michael Brown",

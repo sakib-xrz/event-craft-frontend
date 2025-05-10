@@ -12,7 +12,7 @@ interface FeaturedEventCardProps {
     id: string;
     title: string;
     description: string;
-    date_time: Date;
+    date_time: string;
     venue?: string | null;
     is_public: boolean;
     is_paid: boolean;

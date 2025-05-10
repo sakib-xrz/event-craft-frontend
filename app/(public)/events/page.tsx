@@ -31,12 +31,13 @@ const allEvents = [
     title: "Tech Conference 2025",
     description:
       "Join us for the biggest tech conference of the year featuring industry leaders and innovative workshops.",
-    date_time: new Date("2025-06-15T09:00:00"),
+    date_time: "2025-06-15T09:00:00",
     venue: "Tech Convention Center, San Francisco",
     is_public: true,
     is_paid: true,
     is_virtual: false,
     registration_fee: 199.99,
+    is_featured: false,
     organizer: {
       full_name: "Tech Events Inc.",
     },
@@ -45,12 +46,13 @@ const allEvents = [
     id: "2",
     title: "Web Development Workshop",
     description: "Learn the latest web development techniques and tools.",
-    date_time: new Date("2025-05-20T10:00:00"),
+    date_time: "2025-05-20T10:00:00",
     venue: "Online",
     is_public: true,
     is_paid: false,
     is_virtual: true,
     registration_fee: 0,
+    is_featured: false,
     organizer: {
       full_name: "Code Academy",
     },
@@ -59,12 +61,13 @@ const allEvents = [
     id: "3",
     title: "Music Festival",
     description: "A weekend of amazing music performances and activities.",
-    date_time: new Date("2025-07-10T16:00:00"),
+    date_time: "2025-07-10T16:00:00",
     venue: "Central Park",
     is_public: true,
     is_paid: true,
     is_virtual: false,
     registration_fee: 89.99,
+    is_featured: false,
     organizer: {
       full_name: "Festival Productions",
     },
@@ -73,12 +76,13 @@ const allEvents = [
     id: "4",
     title: "Networking Mixer",
     description: "Connect with professionals in your industry.",
-    date_time: new Date("2025-05-25T18:00:00"),
+    date_time: "2025-05-25T18:00:00",
     venue: "Downtown Business Center",
     is_public: false,
     is_paid: true,
     is_virtual: false,
     registration_fee: 25,
+    is_featured: false,
     organizer: {
       full_name: "Business Network Group",
     },
@@ -87,12 +91,13 @@ const allEvents = [
     id: "5",
     title: "Yoga Retreat",
     description: "A weekend of relaxation and mindfulness.",
-    date_time: new Date("2025-06-05T08:00:00"),
+    date_time: "2025-06-05T08:00:00",
     venue: "Mountain View Resort",
     is_public: true,
     is_paid: true,
     is_virtual: false,
     registration_fee: 299.99,
+    is_featured: false,
     organizer: {
       full_name: "Wellness Collective",
     },
@@ -101,12 +106,13 @@ const allEvents = [
     id: "6",
     title: "Photography Workshop",
     description: "Learn photography techniques from professionals.",
-    date_time: new Date("2025-05-30T14:00:00"),
+    date_time: "2025-05-30T14:00:00",
     venue: "Online",
     is_public: true,
     is_paid: false,
     is_virtual: true,
     registration_fee: 0,
+    is_featured: false,
     organizer: {
       full_name: "Creative Arts Studio",
     },
@@ -115,12 +121,13 @@ const allEvents = [
     id: "7",
     title: "Charity Gala",
     description: "An elegant evening supporting local charities.",
-    date_time: new Date("2025-08-15T19:00:00"),
+    date_time: "2025-08-15T19:00:00",
     venue: "Grand Hotel Ballroom",
     is_public: false,
     is_paid: true,
     is_virtual: false,
     registration_fee: 150,
+    is_featured: false,
     organizer: {
       full_name: "Community Foundation",
     },
@@ -129,12 +136,13 @@ const allEvents = [
     id: "8",
     title: "Business Leadership Conference",
     description: "Learn from top business leaders about management strategies.",
-    date_time: new Date("2025-09-10T09:00:00"),
+    date_time: "2025-09-10T09:00:00",
     venue: "Business Convention Center",
     is_public: true,
     is_paid: true,
     is_virtual: false,
     registration_fee: 249.99,
+    is_featured: false,
     organizer: {
       full_name: "Leadership Institute",
     },
@@ -143,12 +151,13 @@ const allEvents = [
     id: "9",
     title: "Virtual Game Night",
     description: "Join us for a fun night of virtual games and socializing.",
-    date_time: new Date("2025-05-15T20:00:00"),
+    date_time: "2025-05-15T20:00:00",
     venue: "Online",
     is_public: true,
     is_paid: false,
     is_virtual: true,
     registration_fee: 0,
+    is_featured: false,
     organizer: {
       full_name: "Game Night Organizers",
     },
@@ -219,7 +228,7 @@ export default function EventsPage() {
   // Sort events
   const sortedEvents = [...filteredEvents].sort((a, b) => {
     if (sortBy === "date") {
-      return a.date_time.getTime() - b.date_time.getTime();
+      return new Date(a.date_time).getTime() - new Date(b.date_time).getTime();
     } else if (sortBy === "price-low") {
       return a.registration_fee - b.registration_fee;
     } else if (sortBy === "price-high") {
