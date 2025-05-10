@@ -118,7 +118,7 @@ export default function CreateEventPage() {
                     onBlur={formik.handleBlur}
                   />
                   {formik.touched.title && formik.errors.title && (
-                    <p className="text-sm text-destructive">
+                    <p className="text-xs text-destructive">
                       {formik.errors.title}
                     </p>
                   )}
@@ -136,7 +136,7 @@ export default function CreateEventPage() {
                     onBlur={formik.handleBlur}
                   />
                   {formik.touched.description && formik.errors.description && (
-                    <p className="text-sm text-destructive">
+                    <p className="text-xs text-destructive">
                       {formik.errors.description}
                     </p>
                   )}
@@ -157,7 +157,7 @@ export default function CreateEventPage() {
                       onBlur={formik.handleBlur}
                     />
                     {formik.touched.date && formik.errors.date && (
-                      <p className="text-sm text-destructive">
+                      <p className="text-xs text-destructive">
                         {formik.errors.date}
                       </p>
                     )}
@@ -177,7 +177,7 @@ export default function CreateEventPage() {
                       onBlur={formik.handleBlur}
                     />
                     {formik.touched.time && formik.errors.time && (
-                      <p className="text-sm text-destructive">
+                      <p className="text-xs text-destructive">
                         {formik.errors.time}
                       </p>
                     )}
@@ -221,7 +221,7 @@ export default function CreateEventPage() {
                       onBlur={formik.handleBlur}
                     />
                     {formik.touched.venue && formik.errors.venue && (
-                      <p className="text-sm text-destructive">
+                      <p className="text-xs text-destructive">
                         {formik.errors.venue}
                       </p>
                     )}
@@ -297,7 +297,7 @@ export default function CreateEventPage() {
                       />
                       {formik.touched.registrationFee &&
                         formik.errors.registrationFee && (
-                          <p className="text-sm text-destructive">
+                          <p className="text-xs text-destructive">
                             {formik.errors.registrationFee}
                           </p>
                         )}

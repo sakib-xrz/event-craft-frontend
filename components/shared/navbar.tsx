@@ -24,7 +24,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import Container from "./container";
 
 // Mock data - in a real app, this would come from your auth/state management
-const isLoggedIn = true;
+const isLoggedIn = false;
 const user = {
   id: "user1",
   name: "Alex Johnson",
