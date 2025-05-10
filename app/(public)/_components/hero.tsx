@@ -103,12 +103,7 @@ export default function Hero() {
                       <h3 className="font-semibold">Tech Conference 2025</h3>
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Calendar className="h-4 w-4" />
-                        <span>
-                          {new Date(Date.now() + 86400000).toLocaleDateString(
-                            "en-US",
-                            { month: "long", day: "numeric", year: "numeric" }
-                          )}
-                        </span>
+                        <span>Oct 26, 2025</span>
                       </div>
                     </div>
                     <Badge className="badge-paid pointer-events-none">
@@ -118,11 +113,11 @@ export default function Hero() {
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-sm">
                       <Clock className="h-4 w-4 text-muted-foreground" />
-                      <span>9:00 AM - 5:00 PM</span>
+                      <span>10:00 AM - 4:00 PM</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
                       <MapPin className="h-4 w-4 text-muted-foreground" />
-                      <span>Tech Convention Center, SF</span>
+                      <span>Tech Convention Center, Dhaka</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
                       <Users className="h-4 w-4 text-muted-foreground" />
