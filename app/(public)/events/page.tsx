@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useGetEventsQuery } from "@/redux/features/event/eventApi";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Calendar, Search, X, Filter, ChevronDown } from "lucide-react";
@@ -15,7 +17,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
+import { cn, generateQueryString, sanitizeParams } from "@/lib/utils";
 import {
   Collapsible,
   CollapsibleContent,
@@ -23,158 +25,56 @@ import {
 } from "@/components/ui/collapsible";
 import EventCard from "@/components/shared/event-card";
 import Container from "@/components/shared/container";
-
-// Mock data for events
-const allEvents = [
-  {
-    id: "1",
-    title: "Tech Conference 2025",
-    description:
-      "Join us for the biggest tech conference of the year featuring industry leaders and innovative workshops.",
-    date_time: "2025-06-15T09:00:00",
-    venue: "Tech Convention Center, San Francisco",
-    is_public: true,
-    is_paid: true,
-    is_virtual: false,
-    registration_fee: 199.99,
-    is_featured: false,
-    organizer: {
-      full_name: "Tech Events Inc.",
-    },
-  },
-  {
-    id: "2",
-    title: "Web Development Workshop",
-    description: "Learn the latest web development techniques and tools.",
-    date_time: "2025-05-20T10:00:00",
-    venue: "Online",
-    is_public: true,
-    is_paid: false,
-    is_virtual: true,
-    registration_fee: 0,
-    is_featured: false,
-    organizer: {
-      full_name: "Code Academy",
-    },
-  },
-  {
-    id: "3",
-    title: "Music Festival",
-    description: "A weekend of amazing music performances and activities.",
-    date_time: "2025-07-10T16:00:00",
-    venue: "Central Park",
-    is_public: true,
-    is_paid: true,
-    is_virtual: false,
-    registration_fee: 89.99,
-    is_featured: false,
-    organizer: {
-      full_name: "Festival Productions",
-    },
-  },
-  {
-    id: "4",
-    title: "Networking Mixer",
-    description: "Connect with professionals in your industry.",
-    date_time: "2025-05-25T18:00:00",
-    venue: "Downtown Business Center",
-    is_public: false,
-    is_paid: true,
-    is_virtual: false,
-    registration_fee: 25,
-    is_featured: false,
-    organizer: {
-      full_name: "Business Network Group",
-    },
-  },
-  {
-    id: "5",
-    title: "Yoga Retreat",
-    description: "A weekend of relaxation and mindfulness.",
-    date_time: "2025-06-05T08:00:00",
-    venue: "Mountain View Resort",
-    is_public: true,
-    is_paid: true,
-    is_virtual: false,
-    registration_fee: 299.99,
-    is_featured: false,
-    organizer: {
-      full_name: "Wellness Collective",
-    },
-  },
-  {
-    id: "6",
-    title: "Photography Workshop",
-    description: "Learn photography techniques from professionals.",
-    date_time: "2025-05-30T14:00:00",
-    venue: "Online",
-    is_public: true,
-    is_paid: false,
-    is_virtual: true,
-    registration_fee: 0,
-    is_featured: false,
-    organizer: {
-      full_name: "Creative Arts Studio",
-    },
-  },
-  {
-    id: "7",
-    title: "Charity Gala",
-    description: "An elegant evening supporting local charities.",
-    date_time: "2025-08-15T19:00:00",
-    venue: "Grand Hotel Ballroom",
-    is_public: false,
-    is_paid: true,
-    is_virtual: false,
-    registration_fee: 150,
-    is_featured: false,
-    organizer: {
-      full_name: "Community Foundation",
-    },
-  },
-  {
-    id: "8",
-    title: "Business Leadership Conference",
-    description: "Learn from top business leaders about management strategies.",
-    date_time: "2025-09-10T09:00:00",
-    venue: "Business Convention Center",
-    is_public: true,
-    is_paid: true,
-    is_virtual: false,
-    registration_fee: 249.99,
-    is_featured: false,
-    organizer: {
-      full_name: "Leadership Institute",
-    },
-  },
-  {
-    id: "9",
-    title: "Virtual Game Night",
-    description: "Join us for a fun night of virtual games and socializing.",
-    date_time: "2025-05-15T20:00:00",
-    venue: "Online",
-    is_public: true,
-    is_paid: false,
-    is_virtual: true,
-    registration_fee: 0,
-    is_featured: false,
-    organizer: {
-      full_name: "Game Night Organizers",
-    },
-  },
-];
+import { useDebounce } from "@/hooks/use-debounce";
+import { IEvent } from "@/lib/types";
+import EventCardSkeleton from "@/components/shared/event-card-skeleton";
+import CustomPagination from "@/components/shared/custom-pagination";
 
 export default function EventsPage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState("date");
-  const [filters, setFilters] = useState({
-    isPublic: null as boolean | null,
-    isPaid: null as boolean | null,
-    isVirtual: null as boolean | null,
-  });
-  const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Get URL parameters with defaults
+  const initialParams = {
+    page: Number(searchParams.get("page")) || 1,
+    limit: Number(searchParams.get("limit")) || 9,
+    search: searchParams.get("search") || "",
+    sort_by: searchParams.get("sort_by") || "created_at",
+    sort_order: searchParams.get("sort_order") || "desc",
+    is_public: searchParams.get("is_public")
+      ? searchParams.get("is_public") === "true"
+      : null,
+    is_paid: searchParams.get("is_paid")
+      ? searchParams.get("is_paid") === "true"
+      : null,
+    is_virtual: searchParams.get("is_virtual")
+      ? searchParams.get("is_virtual") === "true"
+      : null,
+  };
+
+  const [params, setParams] = useState(initialParams);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [searchInput, setSearchInput] = useState(initialParams.search);
+
+  // Debounce search query
+  const debouncedSearch = useDebounce(searchInput, 500);
+
+  // Update search param when debounced search changes
+  useEffect(() => {
+    setParams((prev) => ({ ...prev, search: debouncedSearch }));
+  }, [debouncedSearch]);
+
+  // Update URL when filters change
+  useEffect(() => {
+    const queryString = generateQueryString(params);
+    router.push(`/events${queryString}`);
+  }, [params, router]);
+
+  // Fetch events with filters
+  const { data: eventsData, isLoading } = useGetEventsQuery(
+    sanitizeParams(params)
+  );
 
   // Check screen size for responsive behavior
   useEffect(() => {
@@ -190,73 +90,61 @@ export default function EventsPage() {
     };
   }, []);
 
-  // Update active filters display
-  useEffect(() => {
-    const newActiveFilters: string[] = [];
-
-    if (filters.isPublic === true) newActiveFilters.push("Public");
-    if (filters.isPublic === false) newActiveFilters.push("Private");
-    if (filters.isPaid === true) newActiveFilters.push("Paid");
-    if (filters.isPaid === false) newActiveFilters.push("Free");
-    if (filters.isVirtual === true) newActiveFilters.push("Virtual");
-    if (filters.isVirtual === false) newActiveFilters.push("In-Person");
-
-    setActiveFilters(newActiveFilters);
-  }, [filters]);
-
-  // Filter events based on search query and filters
-  const filteredEvents = allEvents.filter((event) => {
-    // Search filter
-    const matchesSearch =
-      event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      event.organizer.full_name
-        ?.toLowerCase()
-        .includes(searchQuery.toLowerCase()) ||
-      false;
-
-    // Additional filters
-    if (filters.isPublic !== null && event.is_public !== filters.isPublic)
-      return false;
-    if (filters.isPaid !== null && event.is_paid !== filters.isPaid)
-      return false;
-    if (filters.isVirtual !== null && event.is_virtual !== filters.isVirtual)
-      return false;
-
-    return matchesSearch || searchQuery === "";
-  });
-
-  // Sort events
-  const sortedEvents = [...filteredEvents].sort((a, b) => {
-    if (sortBy === "date") {
-      return new Date(a.date_time).getTime() - new Date(b.date_time).getTime();
-    } else if (sortBy === "price-low") {
-      return a.registration_fee - b.registration_fee;
-    } else if (sortBy === "price-high") {
-      return b.registration_fee - a.registration_fee;
-    } else if (sortBy === "title") {
-      return a.title.localeCompare(b.title);
+  // Handle pagination page change
+  const handlePageChange = (page: number) => {
+    if (page < 1 || (eventsData?.meta && page > eventsData.meta.totalPages)) {
+      return;
     }
-    return 0;
-  });
+    setParams((prev) => ({ ...prev, page }));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-  // Reset all filters
+  // Active filters display
+  const activeFilters = (() => {
+    const filters: string[] = [];
+    if (params.is_public === true) filters.push("Public");
+    if (params.is_public === false) filters.push("Private");
+    if (params.is_paid === true) filters.push("Paid");
+    if (params.is_paid === false) filters.push("Free");
+    if (params.is_virtual === true) filters.push("Virtual");
+    if (params.is_virtual === false) filters.push("In-Person");
+    return filters;
+  })();
+
+  // Reset filters
   const resetFilters = () => {
-    setFilters({
-      isPublic: null,
-      isPaid: null,
-      isVirtual: null,
+    setParams({
+      page: 1,
+      limit: 9,
+      search: "",
+      sort_by: "created_at",
+      sort_order: "asc",
+      is_public: null,
+      is_paid: null,
+      is_virtual: null,
     });
+    setSearchInput("");
   };
 
   // Remove a specific filter
   const removeFilter = (filter: string) => {
     if (filter === "Public" || filter === "Private") {
-      setFilters({ ...filters, isPublic: null });
+      setParams((prev) => ({ ...prev, is_public: null }));
     } else if (filter === "Paid" || filter === "Free") {
-      setFilters({ ...filters, isPaid: null });
+      setParams((prev) => ({ ...prev, is_paid: null }));
     } else if (filter === "Virtual" || filter === "In-Person") {
-      setFilters({ ...filters, isVirtual: null });
+      setParams((prev) => ({ ...prev, is_virtual: null }));
     }
+  };
+
+  // Handle sort change
+  const handleSortChange = (value: string) => {
+    const [field, order] = value.split("-");
+    setParams((prev) => ({
+      ...prev,
+      sort_by: field,
+      sort_order: order,
+    }));
   };
 
   // Filter sidebar component
@@ -307,9 +195,13 @@ export default function EventsPage() {
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="public"
-                checked={filters.isPublic === true}
+                checked={params.is_public === true}
                 onCheckedChange={(checked) =>
-                  setFilters({ ...filters, isPublic: checked ? true : null })
+                  setParams((prev) => ({
+                    ...prev,
+                    page: 1,
+                    is_public: checked ? true : null,
+                  }))
                 }
               />
               <Label htmlFor="public" className="text-sm">
@@ -319,9 +211,13 @@ export default function EventsPage() {
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="private"
-                checked={filters.isPublic === false}
+                checked={params.is_public === false}
                 onCheckedChange={(checked) =>
-                  setFilters({ ...filters, isPublic: checked ? false : null })
+                  setParams((prev) => ({
+                    ...prev,
+                    page: 1,
+                    is_public: checked ? false : null,
+                  }))
                 }
               />
               <Label htmlFor="private" className="text-sm">
@@ -342,9 +238,13 @@ export default function EventsPage() {
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="free"
-                checked={filters.isPaid === false}
+                checked={params.is_paid === false}
                 onCheckedChange={(checked) =>
-                  setFilters({ ...filters, isPaid: checked ? false : null })
+                  setParams((prev) => ({
+                    ...prev,
+                    page: 1,
+                    is_paid: checked ? false : null,
+                  }))
                 }
               />
               <Label htmlFor="free" className="text-sm">
@@ -354,9 +254,13 @@ export default function EventsPage() {
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="paid"
-                checked={filters.isPaid === true}
+                checked={params.is_paid === true}
                 onCheckedChange={(checked) =>
-                  setFilters({ ...filters, isPaid: checked ? true : null })
+                  setParams((prev) => ({
+                    ...prev,
+                    page: 1,
+                    is_paid: checked ? true : null,
+                  }))
                 }
               />
               <Label htmlFor="paid" className="text-sm">
@@ -377,9 +281,13 @@ export default function EventsPage() {
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="virtual"
-                checked={filters.isVirtual === true}
+                checked={params.is_virtual === true}
                 onCheckedChange={(checked) =>
-                  setFilters({ ...filters, isVirtual: checked ? true : null })
+                  setParams((prev) => ({
+                    ...prev,
+                    page: 1,
+                    is_virtual: checked ? true : null,
+                  }))
                 }
               />
               <Label htmlFor="virtual" className="text-sm">
@@ -389,9 +297,13 @@ export default function EventsPage() {
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="in-person"
-                checked={filters.isVirtual === false}
+                checked={params.is_virtual === false}
                 onCheckedChange={(checked) =>
-                  setFilters({ ...filters, isVirtual: checked ? false : null })
+                  setParams((prev) => ({
+                    ...prev,
+                    page: 1,
+                    is_virtual: checked ? false : null,
+                  }))
                 }
               />
               <Label htmlFor="in-person" className="text-sm">
@@ -434,15 +346,28 @@ export default function EventsPage() {
             </Button>
           )}
 
-          <Select value={sortBy} onValueChange={setSortBy}>
+          <Select
+            value={`${params.sort_by}-${params.sort_order}`}
+            onValueChange={handleSortChange}
+          >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="date">Date (Soonest)</SelectItem>
-              <SelectItem value="price-low">Price (Low to High)</SelectItem>
-              <SelectItem value="price-high">Price (High to Low)</SelectItem>
-              <SelectItem value="title">Title (A-Z)</SelectItem>
+              <SelectItem value="created_at-desc">
+                Date (Newest First)
+              </SelectItem>
+              <SelectItem value="created_at-asc">
+                Date (Oldest First)
+              </SelectItem>
+              <SelectItem value="registration_fee-asc">
+                Price (Low to High)
+              </SelectItem>
+              <SelectItem value="registration_fee-desc">
+                Price (High to Low)
+              </SelectItem>
+              <SelectItem value="title-asc">Title (A-Z)</SelectItem>
+              <SelectItem value="title-desc">Title (Z-A)</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -505,8 +430,11 @@ export default function EventsPage() {
               <Input
                 placeholder="Search events by title or organizer..."
                 className="pl-10"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                value={searchInput}
+                onChange={(e) => {
+                  setSearchInput(e.target.value);
+                  setParams((prev) => ({ ...prev, page: 1 }));
+                }}
               />
             </div>
 
@@ -543,30 +471,55 @@ export default function EventsPage() {
           {/* Results count */}
           <div className="mb-6">
             <p className="text-sm text-muted-foreground">
-              Showing{" "}
-              <span className="font-medium text-foreground">
-                {sortedEvents.length}
-              </span>{" "}
-              events
-              {activeFilters.length > 0 && (
+              {!isLoading && (
                 <>
-                  {" "}
-                  filtered by{" "}
-                  <span className="font-medium text-foreground">
-                    {activeFilters.join(", ")}
-                  </span>
+                  {eventsData?.data.length > 0 && (
+                    <>
+                      Showing{" "}
+                      <span className="font-medium text-foreground">
+                        {eventsData?.data.length || 0}
+                      </span>{" "}
+                      events out of {eventsData?.meta?.total || 0}
+                    </>
+                  )}
+                  {activeFilters.length > 0 && (
+                    <>
+                      {" "}
+                      filtered by{" "}
+                      <span className="font-medium text-foreground">
+                        {activeFilters.join(", ")}
+                      </span>
+                    </>
+                  )}
                 </>
               )}
             </p>
           </div>
 
           {/* Events grid */}
-          {sortedEvents.length > 0 ? (
+          {isLoading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-              {sortedEvents.map((event) => (
-                <EventCard key={event.id} event={event} />
+              {Array.from({ length: params.limit }).map((_, index) => (
+                <EventCardSkeleton key={index} />
               ))}
             </div>
+          ) : eventsData?.data.length > 0 ? (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                {eventsData.data.map((event: IEvent) => (
+                  <EventCard key={event.id} event={event} />
+                ))}
+              </div>
+
+              {/* Pagination */}
+              {eventsData.meta && eventsData.meta.total > 1 && (
+                <CustomPagination
+                  params={{ page: params.page }}
+                  totalPages={Math.ceil(eventsData.meta.total / params.limit)}
+                  handlePageChange={handlePageChange}
+                />
+              )}
+            </>
           ) : (
             <div className="flex flex-col items-center justify-center py-12 text-center bg-muted/20 rounded-lg">
               <Calendar className="h-12 w-12 text-muted-foreground mb-4" />
@@ -575,13 +528,13 @@ export default function EventsPage() {
                 Try adjusting your search or filters to find what you&apos;re
                 looking for.
               </p>
-              {(activeFilters.length > 0 || searchQuery) && (
+              {(activeFilters.length > 0 || params.search) && (
                 <Button
                   variant="outline"
                   className="mt-4"
                   onClick={() => {
                     resetFilters();
-                    setSearchQuery("");
+                    setSearchInput("");
                   }}
                 >
                   Clear all filters

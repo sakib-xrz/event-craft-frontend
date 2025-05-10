@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Calendar, Clock, MapPin, Users, ArrowRight } from "lucide-react";
+import { Calendar, Clock, MapPin, Users, ArrowRight, Star } from "lucide-react";
 import { formatDate, formatTime } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import { IEvent } from "@/lib/types";
@@ -24,14 +24,15 @@ export default function EventCard({ event }: EventCardProps) {
       {/* Card top decoration */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40"></div>
 
-      {/* Event type indicators */}
-      <div className="absolute top-4 right-4 md:flex flex-wrap gap-1 z-10 hidden">
-        {event.is_featured && (
-          <Badge variant="default" className="bg-primary hover:bg-primary/90">
-            Featured
-          </Badge>
-        )}
-      </div>
+      {/* Featured ribbon (replaces badge) */}
+      {event.is_featured && (
+        <div className="absolute -right-10 top-5 rotate-45 bg-primary text-primary-foreground px-10 py-1 text-xs font-medium shadow-md z-10">
+          <div className="flex items-center justify-center gap-1">
+            <Star className="h-3 w-3" />
+            <span>Featured</span>
+          </div>
+        </div>
+      )}
 
       {/* Card content */}
       <div className="flex flex-col p-5 flex-grow">
