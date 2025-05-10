@@ -11,36 +11,22 @@ import { IEvent } from "@/lib/types";
 
 interface EventCardProps {
   event: IEvent;
-  featured?: boolean;
 }
 
-export default function EventCard({ event, featured = false }: EventCardProps) {
-  // Calculate if the event is happening soon (within 7 days)
-  const isHappeningSoon =
-    new Date(event.date_time).getTime() - new Date().getTime() <
-    7 * 24 * 60 * 60 * 1000;
-
+export default function EventCard({ event }: EventCardProps) {
   return (
     <Card
       className={cn(
         "group overflow-hidden transition-all duration-300 hover:shadow-lg relative flex flex-col h-full",
-        featured ? "border-primary/20" : "border-border"
+        event.is_featured ? "border-primary/20" : "border-border"
       )}
     >
       {/* Card top decoration */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40"></div>
 
       {/* Event type indicators */}
-      <div className="absolute top-4 right-4 flex flex-wrap gap-1 z-10">
-        {isHappeningSoon && (
-          <Badge
-            variant="default"
-            className="bg-orange-500 hover:bg-orange-600"
-          >
-            Soon
-          </Badge>
-        )}
-        {featured && (
+      <div className="absolute top-4 right-4 md:flex flex-wrap gap-1 z-10 hidden">
+        {event.is_featured && (
           <Badge variant="default" className="bg-primary hover:bg-primary/90">
             Featured
           </Badge>
@@ -67,7 +53,9 @@ export default function EventCard({ event, featured = false }: EventCardProps) {
               variant="outline"
               className={event.is_paid ? "badge-paid" : "badge-free"}
             >
-              {event.is_paid ? `$${event.registration_fee}` : "Free"}
+              {event.is_paid
+                ? `$${Number(event.registration_fee).toFixed(2)}`
+                : "Free"}
             </Badge>
           </div>
 
@@ -112,11 +100,6 @@ export default function EventCard({ event, featured = false }: EventCardProps) {
           </Button>
         </Link>
       </div>
-
-      {/* Background decoration for featured cards */}
-      {featured && (
-        <div className="absolute -right-12 -bottom-12 w-24 h-24 rounded-full bg-primary/5 z-0"></div>
-      )}
     </Card>
   );
 }
