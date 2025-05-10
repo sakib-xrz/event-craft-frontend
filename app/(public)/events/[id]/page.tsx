@@ -25,163 +25,49 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { formatCurrency, formatDate, formatTime } from "@/lib/formatters";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import Container from "@/components/shared/container";
+import { useGetEventByIdQuery } from "@/redux/features/event/eventApi";
+import EventDetailsPageSkeleton from "../_components/skeletion";
 
-// Mock data for event details
-const eventDetails = {
-  id: "1",
-  title: "Tech Conference 2025",
-  description:
-    "Join us for the biggest tech conference of the year featuring industry leaders and innovative workshops. This multi-day event will cover the latest trends in technology, including AI, blockchain, cloud computing, and more. Network with professionals from leading tech companies and startups.\n\nThe conference includes keynote speeches, panel discussions, hands-on workshops, and networking opportunities. Breakfast and lunch will be provided each day. Don't miss this opportunity to expand your knowledge and grow your professional network.",
-  date_time: "2025-06-15T09:00:00",
-  venue: "Tech Convention Center, San Francisco",
-  is_public: false,
-  is_paid: false,
-  is_virtual: true,
-  registration_fee: 0,
-  status: "UPCOMING",
+interface IEventDetailsUser {
+  id: string;
+  full_name: string;
+  email: string;
+}
+
+interface IEventDetailsParticipant {
+  user: IEventDetailsUser;
+}
+
+interface IEventDetailsReview {
+  id: string;
+  user: IEventDetailsUser;
+  rating: number;
+  comment: string;
+  created_at: Date;
+}
+
+interface IEventDetails {
+  id: string;
+  title: string;
+  description: string;
+  date_time: string;
+  venue: string | null;
+  is_featured: boolean;
+  is_public: boolean;
+  is_paid: boolean;
+  is_virtual: boolean;
+  registration_fee: number;
+  status: string;
   organizer: {
-    id: "org1",
-    full_name: "Tech Events Inc.",
-    avatar_url: null,
-  },
-  participants: [
-    {
-      id: "p1",
-      user: {
-        full_name: "John Doe",
-        role: "Speaker",
-        company: "Google",
-        avatar_url: null,
-      },
-    },
-    {
-      id: "p2",
-      user: {
-        full_name: "Jane Smith",
-        role: "Attendee",
-        company: "Microsoft",
-        avatar_url: null,
-      },
-    },
-    {
-      id: "p3",
-      user: {
-        full_name: "Robert Johnson",
-        role: "Speaker",
-        company: "Amazon",
-        avatar_url: null,
-      },
-    },
-    {
-      id: "p4",
-      user: {
-        full_name: "Emily Davis",
-        role: "Attendee",
-        company: "Apple",
-        avatar_url: null,
-      },
-    },
-    {
-      id: "p5",
-      user: {
-        full_name: "Michael Brown",
-        role: "Sponsor",
-        company: "Tesla",
-        avatar_url: null,
-      },
-    },
-    {
-      id: "p6",
-      user: {
-        full_name: "Sarah Wilson",
-        role: "Attendee",
-        company: "Facebook",
-        avatar_url: null,
-      },
-    },
-    {
-      id: "p7",
-      user: {
-        full_name: "David Lee",
-        role: "Attendee",
-        company: "Twitter",
-        avatar_url: null,
-      },
-    },
-    {
-      id: "p8",
-      user: {
-        full_name: "Lisa Chen",
-        role: "Speaker",
-        company: "Netflix",
-        avatar_url: null,
-      },
-    },
-    {
-      id: "p9",
-      user: {
-        full_name: "Kevin Taylor",
-        role: "Attendee",
-        company: "Uber",
-        avatar_url: null,
-      },
-    },
-    {
-      id: "p10",
-      user: {
-        full_name: "Amanda White",
-        role: "Sponsor",
-        company: "Airbnb",
-        avatar_url: null,
-      },
-    },
-  ],
-  reviews: [
-    {
-      id: "r1",
-      user: { full_name: "John Doe", avatar_url: null },
-      rating: 5,
-      comment:
-        "Great event! Learned a lot and made valuable connections. The speakers were knowledgeable and the workshops were hands-on and practical. Would definitely attend again next year!",
-      created_at: new Date("2024-06-20"),
-      helpful_count: 12,
-      not_helpful_count: 2,
-    },
-    {
-      id: "r2",
-      user: { full_name: "Jane Smith", avatar_url: null },
-      rating: 4,
-      comment:
-        "Very informative sessions. Would attend again. The venue was excellent and the food was great. Only downside was that some sessions were too crowded.",
-      created_at: new Date("2024-06-19"),
-      helpful_count: 8,
-      not_helpful_count: 1,
-    },
-    {
-      id: "r3",
-      user: { full_name: "Robert Johnson", avatar_url: null },
-      rating: 5,
-      comment:
-        "Excellent networking opportunities and insightful presentations. The organizers did a fantastic job with the schedule and speaker selection.",
-      created_at: new Date("2024-06-18"),
-      helpful_count: 15,
-      not_helpful_count: 0,
-    },
-    {
-      id: "r4",
-      user: { full_name: "Emily Davis", avatar_url: null },
-      rating: 3,
-      comment:
-        "Good content but the venue was a bit cramped. Would have appreciated more space between sessions.",
-      created_at: new Date("2024-06-17"),
-      helpful_count: 5,
-      not_helpful_count: 3,
-    },
-  ],
-};
+    full_name: string;
+    email: string;
+  };
+  participants: IEventDetailsParticipant[] | [];
+  reviews: IEventDetailsReview[] | [];
+}
 
 export default function EventDetailsPage({
   params,
@@ -189,12 +75,18 @@ export default function EventDetailsPage({
   params: { id: string };
 }) {
   const [expandedReviews, setExpandedReviews] = useState<string[]>([]);
-  console.log(params);
 
-  // In a real app, you would fetch the event details based on the ID
-  const event = eventDetails;
+  const {
+    data: eventDetails,
+    isLoading,
+    isError,
+  } = useGetEventByIdQuery(params.id);
 
-  if (!event) {
+  if (isLoading) {
+    return <EventDetailsPageSkeleton />;
+  }
+
+  if (isError) {
     return (
       <Container>
         <h1 className="text-2xl font-bold mb-4">Event not found</h1>
@@ -208,6 +100,8 @@ export default function EventDetailsPage({
       </Container>
     );
   }
+
+  const event = eventDetails?.data as IEventDetails;
 
   // Toggle review expansion
   const toggleReviewExpansion = (reviewId: string) => {
@@ -340,13 +234,7 @@ export default function EventDetailsPage({
 
               <div>
                 <h2 className="text-xl font-semibold mb-3">About this event</h2>
-                <div className="prose max-w-none dark:prose-invert">
-                  {event.description.split("\n\n").map((paragraph, index) => (
-                    <p key={index} className="mb-4 text-muted-foreground">
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
+                <p className="text-muted-foreground">{event.description}</p>
               </div>
             </TabsContent>
 
@@ -360,36 +248,28 @@ export default function EventDetailsPage({
                 <CardContent>
                   {event.participants.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {event.participants.map((participant) => (
-                        <div
-                          key={participant.id}
-                          className="flex items-center gap-3 p-3 rounded-lg border hover:bg-muted/50 transition-colors"
-                        >
-                          <Avatar className="h-12 w-12 border">
-                            {participant.user.avatar_url ? (
-                              <AvatarImage
-                                src={
-                                  participant.user.avatar_url ||
-                                  "/placeholder.svg"
-                                }
-                                alt={participant.user.full_name}
-                              />
-                            ) : (
+                      {event.participants.map(
+                        (participant: IEventDetailsParticipant) => (
+                          <div
+                            key={participant.user.id}
+                            className="flex items-center gap-3 p-3 rounded-lg border hover:bg-muted/50 transition-colors"
+                          >
+                            <Avatar className="h-12 w-12 border">
                               <AvatarFallback className="bg-primary/10 text-primary">
                                 {participant.user.full_name
                                   .split(" ")
                                   .map((n) => n[0])
                                   .join("")}
                               </AvatarFallback>
-                            )}
-                          </Avatar>
-                          <div className="min-w-0">
-                            <p className="font-medium truncate">
-                              {participant.user.full_name}
-                            </p>
+                            </Avatar>
+                            <div className="min-w-0">
+                              <p className="font-medium truncate">
+                                {participant.user.full_name}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        )
+                      )}
                     </div>
                   ) : (
                     <div className="text-center py-8">
@@ -460,22 +340,12 @@ export default function EventDetailsPage({
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-3">
                                 <Avatar className="h-10 w-10 border">
-                                  {review.user.avatar_url ? (
-                                    <AvatarImage
-                                      src={
-                                        review.user.avatar_url ||
-                                        "/placeholder.svg"
-                                      }
-                                      alt={review.user.full_name}
-                                    />
-                                  ) : (
-                                    <AvatarFallback className="bg-primary/10 text-primary">
-                                      {review.user.full_name
-                                        .split(" ")
-                                        .map((n) => n[0])
-                                        .join("")}
-                                    </AvatarFallback>
-                                  )}
+                                  <AvatarFallback className="bg-primary/10 text-primary">
+                                    {review.user.full_name
+                                      .split(" ")
+                                      .map((n) => n[0])
+                                      .join("")}
+                                  </AvatarFallback>
                                 </Avatar>
                                 <div>
                                   <span className="font-medium">
@@ -543,9 +413,6 @@ export default function EventDetailsPage({
                     <div className="text-center py-8">
                       <MessageSquare className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
                       <h3 className="text-lg font-medium">No reviews yet</h3>
-                      <p className="text-muted-foreground mt-1">
-                        Be the first to review this event after attending.
-                      </p>
                     </div>
                   )}
                 </CardContent>
@@ -623,19 +490,12 @@ export default function EventDetailsPage({
               <h3 className="font-medium mb-3">Event Organizer</h3>
               <div className="flex items-center gap-3">
                 <Avatar>
-                  {event.organizer.avatar_url ? (
-                    <AvatarImage
-                      src={event.organizer.avatar_url || "/placeholder.svg"}
-                      alt={event.organizer.full_name}
-                    />
-                  ) : (
-                    <AvatarFallback>
-                      {event.organizer.full_name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
-                    </AvatarFallback>
-                  )}
+                  <AvatarFallback>
+                    {event.organizer.full_name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
+                  </AvatarFallback>
                 </Avatar>
                 <div>
                   <p className="font-medium">{event.organizer.full_name}</p>

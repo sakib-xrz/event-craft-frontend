@@ -19,12 +19,6 @@ export default function EventCardSkeleton({
       {/* Card top decoration */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40"></div>
 
-      {/* Event type indicators */}
-      <div className="absolute top-4 right-4 flex flex-wrap gap-1 z-10">
-        <Skeleton className="h-5 w-16 rounded-full" />
-        {featured && <Skeleton className="h-5 w-20 rounded-full" />}
-      </div>
-
       {/* Card content */}
       <div className="flex flex-col p-5 flex-grow">
         <div className="space-y-2.5 mb-4">
@@ -65,11 +59,6 @@ export default function EventCardSkeleton({
       <div className="p-5 pt-0 mt-4">
         <Skeleton className="h-10 w-full" />
       </div>
-
-      {/* Background decoration for featured cards */}
-      {featured && (
-        <div className="absolute -right-12 -bottom-12 w-24 h-24 rounded-full bg-primary/5 z-0"></div>
-      )}
     </Card>
   );
 }

@@ -325,7 +325,7 @@ export default function EventsPage() {
             Discover and join exciting events
           </p>
         </div>
-        <div className="flex items-center gap-2 w-full">
+        <div className="flex items-center gap-2 w-full justify-end">
           {isSmallScreen && (
             <Button
               variant="outline"
