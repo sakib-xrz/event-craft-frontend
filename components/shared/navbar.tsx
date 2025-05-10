@@ -137,12 +137,12 @@ export default function Navbar() {
         <div className="flex items-center gap-2 lg:gap-3">
           {!isLoggedIn ? (
             <>
-              <Link href="/auth/login" className="hidden sm:flex">
+              <Link href="/login" className="hidden sm:flex">
                 <Button variant="outline" size="sm">
                   Sign In
                 </Button>
               </Link>
-              <Link href="/auth/register">
+              <Link href="/register">
                 <Button size="sm">Sign Up</Button>
               </Link>
             </>

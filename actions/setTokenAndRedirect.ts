@@ -10,7 +10,7 @@ interface SetTokenAndRedirectOption {
 
 const setTokenAndRedirect = async (
   token: string,
-  option: SetTokenAndRedirectOption,
+  option: SetTokenAndRedirectOption
 ) => {
   cookies().set(AUTH_TOKEN_KEY, token, {
     expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),

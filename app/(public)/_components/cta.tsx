@@ -18,7 +18,7 @@ export default function CTA() {
             memorable experiences.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 pt-2">
-            <Link href="/auth/register">
+            <Link href="/register">
               <Button size="lg" className="gap-1.5">
                 <UserPlus className="h-4 w-4" />
                 Get Started for Free

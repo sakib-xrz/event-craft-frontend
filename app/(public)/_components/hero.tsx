@@ -48,7 +48,7 @@ export default function Hero() {
                   Explore Events
                 </Button>
               </Link>
-              <Link href="/auth/register">
+              <Link href="/register">
                 <Button
                   size="lg"
                   variant="outline"
