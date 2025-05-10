@@ -318,14 +318,14 @@ export default function EventsPage() {
 
   return (
     <Container>
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 lg:mb-8">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Events</h1>
           <p className="text-muted-foreground">
             Discover and join exciting events
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full">
           {isSmallScreen && (
             <Button
               variant="outline"
@@ -350,7 +350,7 @@ export default function EventsPage() {
             value={`${params.sort_by}-${params.sort_order}`}
             onValueChange={handleSortChange}
           >
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full sm:w-[180px]">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
             <SelectContent>
@@ -373,7 +373,7 @@ export default function EventsPage() {
         </div>
       </div>
 
-      <div className="relative flex flex-col lg:flex-row gap-8">
+      <div className="relative flex flex-col lg:flex-row lg:gap-8">
         {/* Mobile filter drawer */}
         {isSmallScreen && (
           <div
@@ -428,7 +428,7 @@ export default function EventsPage() {
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                placeholder="Search events by title or organizer..."
+                placeholder="Search events by title..."
                 className="pl-10"
                 value={searchInput}
                 onChange={(e) => {
