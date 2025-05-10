@@ -7,22 +7,10 @@ import { Card } from "@/components/ui/card";
 import { Calendar, Clock, MapPin, Users, ArrowRight } from "lucide-react";
 import { formatDate, formatTime } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
+import { IEvent } from "@/lib/types";
 
 interface EventCardProps {
-  event: {
-    id: string;
-    title: string;
-    description: string;
-    date_time: Date;
-    venue?: string | null;
-    is_public: boolean;
-    is_paid: boolean;
-    is_virtual: boolean;
-    registration_fee: number;
-    organizer: {
-      full_name: string | null;
-    };
-  };
+  event: IEvent;
   featured?: boolean;
 }
 

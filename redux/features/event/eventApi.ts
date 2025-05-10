@@ -4,7 +4,10 @@ import { tagTypes } from "@/redux/tagTypes";
 export const eventApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getEvents: builder.query({
-      query: () => "/events",
+      query: (params) => ({
+        url: "/events",
+        params,
+      }),
       providesTags: [tagTypes.event],
     }),
     getFeaturedEvent: builder.query({

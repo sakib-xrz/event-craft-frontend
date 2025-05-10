@@ -8,6 +8,7 @@ export enum PaymentStatus {
   PAID = "PAID",
   FREE = "FREE",
   FAILED = "FAILED",
+  CANCELLED = "CANCELLED",
 }
 
 export enum ApprovalStatus {
@@ -22,7 +23,7 @@ export enum InvitationStatus {
   DECLINED = "DECLINED",
 }
 
-export interface User {
+export interface IUser {
   id: string;
   full_name: string;
   email: string;
@@ -33,22 +34,23 @@ export interface User {
   updated_at: string;
 }
 
-export interface Event {
+export interface IEvent {
   id: string;
   title: string;
   description: string;
   date_time: string;
   venue: string;
+  is_featured: boolean;
   is_public: boolean;
   is_paid: boolean;
-  registration_fee: number;
-  organizer_id: string;
-  created_at: string;
-  updated_at: string;
-  organizer: User;
+  is_virtual: boolean;
+  registration_fee: string;
+  organizer: {
+    full_name: string;
+  };
 }
 
-export interface Participant {
+export interface IParticipant {
   id: string;
   event_id: string;
   user_id: string;
@@ -56,11 +58,11 @@ export interface Participant {
   approval_status: ApprovalStatus;
   is_banned: boolean;
   joined_at: string;
-  user?: User;
-  event?: Event;
+  user?: IUser;
+  event?: IEvent;
 }
 
-export interface Invitation {
+export interface IInvitation {
   id: string;
   event_id: string;
   sender_id: string;
@@ -69,23 +71,23 @@ export interface Invitation {
   payment_status: PaymentStatus;
   invitation_status: InvitationStatus;
   created_at: string;
-  sender?: User;
-  receiver?: User;
-  event?: Event;
+  sender?: IUser;
+  receiver?: IUser;
+  event?: IEvent;
 }
 
-export interface Review {
+export interface IReview {
   id: string;
   user_id: string;
   event_id: string;
   rating: number;
   comment: string | null;
   created_at: string;
-  user: User;
-  event: Event;
+  user: IUser;
+  event: IEvent;
 }
 
-export interface Payment {
+export interface IPayment {
   id: string;
   user_id: string;
   event_id: string;
@@ -95,6 +97,6 @@ export interface Payment {
   transaction_id: string;
   gateway_data: Record<string, unknown>;
   paid_at: string;
-  user: User;
-  event: Event;
+  user: IUser;
+  event: IEvent;
 }

@@ -1,5 +1,4 @@
-export function formatDate(date: Date): string {
-  // first convert the date to the local timezone
+export function formatDate(date: string): string {
   const localDate = new Date(date);
   return new Intl.DateTimeFormat("en-US", {
     month: "long",
@@ -8,7 +7,7 @@ export function formatDate(date: Date): string {
   }).format(localDate);
 }
 
-export function formatTime(date: Date): string {
+export function formatTime(date: string): string {
   const localDate = new Date(date);
   return new Intl.DateTimeFormat("en-US", {
     hour: "numeric",
@@ -25,6 +24,6 @@ export function formatCurrency(amount: number): string {
   }).format(amount);
 }
 
-export function formatDateTime(date: Date): string {
+export function formatDateTime(date: string): string {
   return `${formatDate(date)} at ${formatTime(date)}`;
 }
