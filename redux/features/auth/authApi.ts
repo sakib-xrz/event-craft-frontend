@@ -2,6 +2,12 @@ import { baseApi } from "@/redux/api/baseApi";
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    me: builder.query({
+      query: () => ({
+        url: `/auth/me`,
+        method: "GET",
+      }),
+    }),
     changePassword: builder.mutation({
       query: (data) => ({
         url: `/auth/change-password`,
@@ -12,4 +18,4 @@ export const authApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useChangePasswordMutation } = authApi;
+export const { useMeQuery, useChangePasswordMutation } = authApi;

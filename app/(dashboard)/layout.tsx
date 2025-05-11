@@ -11,7 +11,6 @@ import {
   SidebarContent,
   SidebarTrigger,
   SidebarHeader,
-  SidebarFooter,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
@@ -19,7 +18,7 @@ import {
   SidebarMenuSubItem,
   SidebarMenuSubButton,
 } from "@/components/ui/sidebar";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -45,18 +44,9 @@ import {
   Users,
   List,
   ChevronDown,
+  User,
 } from "lucide-react";
-
-// Mock user data - in a real app, this would come from your auth system
-const user = {
-  id: "user1",
-  name: "Alex Johnson",
-  email: "alex@example.com",
-  avatar: null,
-  role: "USER",
-  notifications: 3,
-  invitations: 2,
-};
+import { useCurrentUser } from "@/redux/features/auth/authSlice";
 
 export default function DashboardLayout({
   children,
@@ -65,6 +55,8 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
+
+  const user = useCurrentUser();
 
   // Prevent hydration mismatch
   useEffect(() => {
@@ -175,9 +167,9 @@ export default function DashboardLayout({
                   <Link href="/dashboard/invitations">
                     <Mail className="h-4 w-4" />
                     <span>Invitations</span>
-                    {user.invitations > 0 && (
+                    {user && (
                       <Badge variant="secondary" className="ml-auto">
-                        {user.invitations}
+                        2
                       </Badge>
                     )}
                   </Link>
@@ -199,34 +191,6 @@ export default function DashboardLayout({
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarContent>
-
-          <SidebarFooter>
-            <div className="px-3 py-2">
-              <div className="flex items-center gap-3 mb-3">
-                <Avatar>
-                  {user.avatar ? (
-                    <AvatarImage
-                      src={user.avatar || "/placeholder.svg"}
-                      alt={user.name}
-                    />
-                  ) : (
-                    <AvatarFallback className="bg-primary/10 text-primary">
-                      {user.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
-                    </AvatarFallback>
-                  )}
-                </Avatar>
-                <div className="overflow-hidden">
-                  <p className="text-sm font-medium truncate">{user.name}</p>
-                  <p className="text-xs text-muted-foreground truncate">
-                    {user.email}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </SidebarFooter>
         </Sidebar>
 
         <div className="flex-1 flex flex-col relative">
@@ -238,9 +202,9 @@ export default function DashboardLayout({
                 <Button variant="ghost" size="icon" className="relative">
                   <Bell className="h-5 w-5" />
                   <span className="sr-only">Notifications</span>
-                  {user.notifications > 0 && (
+                  {user && (
                     <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground">
-                      {user.notifications}
+                      3
                     </span>
                   )}
                 </Button>
@@ -249,27 +213,24 @@ export default function DashboardLayout({
                 <DropdownMenuTrigger asChild className="cursor-pointer">
                   <Avatar className="h-8 w-8">
                     <AvatarFallback className="bg-primary/10 text-primary">
-                      {user.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
+                      <User className="h-5 w-5" />
                     </AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="min-w-44 max-w-60" align="end">
                   <DropdownMenuLabel className="truncate">
-                    {user.email}
+                    {user?.email}
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem className="cursor-pointer" asChild>
                     <Link href="/">Profile</Link>
                   </DropdownMenuItem>
-                  {user.role === "USER" && (
+                  {user?.role === "USER" && (
                     <DropdownMenuItem className="cursor-pointer" asChild>
                       <Link href="/dashboard">Dashboard</Link>
                     </DropdownMenuItem>
                   )}
-                  {user.role === "ADMIN" && (
+                  {user?.role === "ADMIN" && (
                     <DropdownMenuItem className="cursor-pointer" asChild>
                       <Link href="/admin">Admin Panel</Link>
                     </DropdownMenuItem>

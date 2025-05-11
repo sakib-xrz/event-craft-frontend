@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Calendar, Menu, Bell } from "lucide-react";
+import { Calendar, Menu, Bell, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -22,23 +22,14 @@ import {
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import Container from "./container";
-
-// Mock data - in a real app, this would come from your auth/state management
-const isLoggedIn = false;
-const user = {
-  id: "user1",
-  name: "Alex Johnson",
-  email: "alex@example.com",
-  avatar: null,
-  role: "USER",
-  notifications: 3,
-  invitations: 2,
-};
+import { useCurrentUser } from "@/redux/features/auth/authSlice";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
+
+  const user = useCurrentUser();
 
   // Handle scroll effect for navbar
   useEffect(() => {
@@ -135,7 +126,7 @@ export default function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2 lg:gap-3">
-          {!isLoggedIn ? (
+          {!user ? (
             <>
               <Link href="/login" className="hidden sm:flex">
                 <Button variant="outline" size="sm">
@@ -152,9 +143,9 @@ export default function Navbar() {
                 <Button variant="ghost" size="icon" className="relative">
                   <Bell className="h-5 w-5" />
                   <span className="sr-only">Notifications</span>
-                  {isLoggedIn && user.notifications > 0 && (
+                  {user && (
                     <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground">
-                      {user.notifications}
+                      3
                     </span>
                   )}
                 </Button>
@@ -163,10 +154,7 @@ export default function Navbar() {
                 <DropdownMenuTrigger asChild className="cursor-pointer">
                   <Avatar className="h-8 w-8">
                     <AvatarFallback className="bg-primary/10 text-primary">
-                      {user.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
+                      <User className="h-5 w-5" />
                     </AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
