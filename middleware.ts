@@ -12,7 +12,12 @@ const commonPrivateRoutes = ["/change-password", "/profile"];
 
 const roleBasedRoutes = {
   ADMIN: [/^\/admin/],
-  USER: [/^\/dashboard/, "/my-events"],
+  USER: [
+    /^\/dashboard/,
+    "/my-events",
+    "/events/join/pending-approval",
+    "/events/join/success",
+  ],
 };
 
 export function middleware(request: {
@@ -83,5 +88,7 @@ export const config = {
     "/admin/:path*",
     "/dashboard/:path*",
     "/my-events",
+    "/events/join/pending-approval",
+    "/events/join/success",
   ],
 };
