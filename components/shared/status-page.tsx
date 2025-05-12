@@ -140,7 +140,9 @@ export default function StatusPage({
                 <h2 className="text-lg font-semibold mb-4">Payment Details</h2>
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Payment ID</span>
+                    <span className="text-muted-foreground">
+                      Transaction ID
+                    </span>
                     <span className="font-medium">{paymentData.id}</span>
                   </div>
                   <div className="flex justify-between">
@@ -153,12 +155,6 @@ export default function StatusPage({
                     <span className="text-muted-foreground">Date</span>
                     <span className="font-medium">
                       {paymentData.date.toLocaleDateString()}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Method</span>
-                    <span className="font-medium">
-                      {paymentData.method} ending in {paymentData.last4}
                     </span>
                   </div>
                 </div>
