@@ -13,7 +13,6 @@ export default function JoinPendingApprovalPage() {
       description="Your request to join this event has been submitted and is pending approval from the event organizer."
       icon={<Clock className="h-10 w-10 text-amber-500" />}
       iconColor="amber"
-      showEventDetails={true}
       primaryActionText="View Dashboard"
       primaryActionHref="/dashboard"
       secondaryActionText="Browse Events"

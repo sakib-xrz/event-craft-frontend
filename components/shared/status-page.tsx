@@ -35,7 +35,7 @@ interface StatusPageProps {
     venue: string;
     is_virtual: boolean;
   };
-  token: string | null;
+  token?: string | null;
   showToken?: boolean;
 }
 export default function StatusPage({
@@ -98,7 +98,7 @@ export default function StatusPage({
           </p>
         </div>
 
-        {(showEventDetails || showPaymentDetails) && (
+        {showEventDetails || showPaymentDetails ? (
           <Card className="mb-8 overflow-hidden">
             {showEventDetails && eventData && (
               <div className="p-6 border-b">
@@ -184,7 +184,7 @@ export default function StatusPage({
               </div>
             )}
           </Card>
-        )}
+        ) : null}
 
         {additionalContent && <div className="mb-8">{additionalContent}</div>}
 
