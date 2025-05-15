@@ -150,6 +150,14 @@ export default function EventDetailsPage({
         eventId: event.id,
       }).unwrap();
 
+      if (!event.is_paid) {
+        if (event.is_public) {
+          router.push(`/events/join/success?token=${response.data?.token}`);
+        } else {
+          router.push("/events/join/pending-approval");
+        }
+      }
+
       const participantId = response.data?.id;
 
       if (!participantId) {
@@ -169,11 +177,7 @@ export default function EventDetailsPage({
           toast.error("Failed to create payment link");
         }
       }
-
-      toast.success("Successfully joined event!");
     } catch (error: unknown) {
-      console.error("Registration error:", error);
-
       if (typeof error === "object" && error !== null && "data" in error) {
         const errorObj = error as { data?: { message?: string } };
         toast.error(errorObj.data?.message || "Failed to process request");

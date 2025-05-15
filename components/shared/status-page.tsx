@@ -12,6 +12,7 @@ import { formatCurrency, formatDate, formatTime } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import Container from "@/components/shared/container";
 import { Clock, Calendar, MapPin, CalendarIcon } from "lucide-react";
+import QrCode from "./qr-code";
 
 interface StatusPageProps {
   title: string;
@@ -27,8 +28,16 @@ interface StatusPageProps {
   tertiaryActionText?: string;
   tertiaryActionHref?: string;
   additionalContent?: React.ReactNode;
+  eventData?: {
+    id: string;
+    title: string;
+    date_time: string;
+    venue: string;
+    is_virtual: boolean;
+  };
+  token: string | null;
+  showToken?: boolean;
 }
-
 export default function StatusPage({
   title,
   description,
@@ -43,20 +52,12 @@ export default function StatusPage({
   tertiaryActionText,
   tertiaryActionHref,
   additionalContent,
+  eventData,
+  token,
+  showToken = false,
 }: StatusPageProps) {
   const searchParams = useSearchParams();
   const [isVisible, setIsVisible] = useState(false);
-
-  // Mock event data - in a real app, you might fetch this from an API
-  const eventData = {
-    id: searchParams.get("eventId") || "event-123",
-    title: searchParams.get("eventTitle") || "Tech Conference 2023",
-    date_time: searchParams.get("eventDate")
-      ? (searchParams.get("eventDate") as string)
-      : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // Default to 7 days from now
-    venue: searchParams.get("eventVenue") || "Convention Center, New York",
-    is_virtual: searchParams.get("isVirtual") === "true",
-  };
 
   // Mock payment data
   const paymentData = {
@@ -99,7 +100,7 @@ export default function StatusPage({
 
         {(showEventDetails || showPaymentDetails) && (
           <Card className="mb-8 overflow-hidden">
-            {showEventDetails && (
+            {showEventDetails && eventData && (
               <div className="p-6 border-b">
                 <h2 className="text-lg font-semibold mb-4">Event Details</h2>
                 <div className="space-y-4">
@@ -120,17 +121,39 @@ export default function StatusPage({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                     <div className="flex items-center gap-2">
                       <Calendar className="h-4 w-4 text-primary" />
-                      <span>{formatDate(eventData.date_time)}</span>
+                      <span>
+                        {eventData?.date_time
+                          ? formatDate(eventData?.date_time)
+                          : "N/A"}
+                      </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Clock className="h-4 w-4 text-primary" />
-                      <span>{formatTime(eventData.date_time)}</span>
+                      <span>
+                        {eventData?.date_time
+                          ? formatTime(eventData?.date_time)
+                          : "N/A"}
+                      </span>
                     </div>
                     <div className="flex items-center gap-2 sm:col-span-2">
                       <MapPin className="h-4 w-4 text-primary" />
                       <span>{eventData.venue}</span>
                     </div>
                   </div>
+
+                  {showToken && <hr />}
+
+                  {showToken && token && (
+                    <div className="flex flex-col items-center">
+                      <h2 className="text-lg font-semibold mb-1">
+                        QR Code for Event Check-In
+                      </h2>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        Please collect the QR code for the event check-in.
+                      </p>
+                      <QrCode text={token} />
+                    </div>
+                  )}
                 </div>
               </div>
             )}
