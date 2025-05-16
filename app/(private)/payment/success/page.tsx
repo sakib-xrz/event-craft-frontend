@@ -35,8 +35,6 @@ export default function PaymentSuccessPage() {
           venue: payment?.data?.event?.venue,
           is_virtual: payment?.data?.event?.is_virtual,
         }}
-        token={token}
-        showToken={true}
         showPaymentDetails={true}
         paymentData={{
           amount: payment?.data?.amount,
@@ -44,6 +42,8 @@ export default function PaymentSuccessPage() {
           paid_at: payment?.data?.paid_at,
           transaction_id: payment?.data?.transaction_id,
         }}
+        token={token}
+        showToken={true}
       />
     </>
   );
