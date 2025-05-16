@@ -22,10 +22,16 @@ interface StatusPageProps {
   showPaymentDetails?: boolean;
   primaryActionText?: string;
   primaryActionHref?: string;
+  primaryActionOnClick?: () => void;
+  primaryActionDisabled?: boolean;
   secondaryActionText?: string;
   secondaryActionHref?: string;
+  secondaryActionOnClick?: () => void;
+  secondaryActionDisabled?: boolean;
   tertiaryActionText?: string;
   tertiaryActionHref?: string;
+  tertiaryActionOnClick?: () => void;
+  tertiaryActionDisabled?: boolean;
   additionalContent?: React.ReactNode;
   eventData?: {
     id: string;
@@ -52,10 +58,16 @@ export default function StatusPage({
   showPaymentDetails = false,
   primaryActionText = "Return to Dashboard",
   primaryActionHref = "/dashboard",
+  primaryActionOnClick,
+  primaryActionDisabled = false,
   secondaryActionText,
   secondaryActionHref,
+  secondaryActionOnClick,
+  secondaryActionDisabled = false,
   tertiaryActionText,
   tertiaryActionHref,
+  tertiaryActionOnClick,
+  tertiaryActionDisabled = false,
   additionalContent,
   eventData,
   paymentData,
@@ -189,28 +201,92 @@ export default function StatusPage({
         {additionalContent && <div className="mb-8">{additionalContent}</div>}
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          {primaryActionText && primaryActionHref && (
-            <Link href={primaryActionHref}>
-              <Button size="lg" className="w-full sm:w-auto">
-                {primaryActionText}
-              </Button>
-            </Link>
+          {primaryActionText && (
+            <>
+              {primaryActionHref && !primaryActionOnClick ? (
+                <Link
+                  href={primaryActionHref}
+                  tabIndex={primaryActionDisabled ? -1 : undefined}
+                >
+                  <Button
+                    size="lg"
+                    className="w-full sm:w-auto"
+                    disabled={primaryActionDisabled}
+                  >
+                    {primaryActionText}
+                  </Button>
+                </Link>
+              ) : (
+                <Button
+                  size="lg"
+                  className="w-full sm:w-auto"
+                  onClick={primaryActionOnClick}
+                  disabled={primaryActionDisabled}
+                >
+                  {primaryActionText}
+                </Button>
+              )}
+            </>
           )}
 
-          {secondaryActionText && secondaryActionHref && (
-            <Link href={secondaryActionHref}>
-              <Button variant="outline" size="lg" className="w-full sm:w-auto">
-                {secondaryActionText}
-              </Button>
-            </Link>
+          {secondaryActionText && (
+            <>
+              {secondaryActionHref && !secondaryActionOnClick ? (
+                <Link
+                  href={secondaryActionHref}
+                  tabIndex={secondaryActionDisabled ? -1 : undefined}
+                >
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="w-full sm:w-auto"
+                    disabled={secondaryActionDisabled}
+                  >
+                    {secondaryActionText}
+                  </Button>
+                </Link>
+              ) : (
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="w-full sm:w-auto"
+                  onClick={secondaryActionOnClick}
+                  disabled={secondaryActionDisabled}
+                >
+                  {secondaryActionText}
+                </Button>
+              )}
+            </>
           )}
 
-          {tertiaryActionText && tertiaryActionHref && (
-            <Link href={tertiaryActionHref}>
-              <Button variant="ghost" size="lg" className="w-full sm:w-auto">
-                {tertiaryActionText}
-              </Button>
-            </Link>
+          {tertiaryActionText && (
+            <>
+              {tertiaryActionHref && !tertiaryActionOnClick ? (
+                <Link
+                  href={tertiaryActionHref}
+                  tabIndex={tertiaryActionDisabled ? -1 : undefined}
+                >
+                  <Button
+                    variant="ghost"
+                    size="lg"
+                    className="w-full sm:w-auto"
+                    disabled={tertiaryActionDisabled}
+                  >
+                    {tertiaryActionText}
+                  </Button>
+                </Link>
+              ) : (
+                <Button
+                  variant="ghost"
+                  size="lg"
+                  className="w-full sm:w-auto"
+                  onClick={tertiaryActionOnClick}
+                  disabled={tertiaryActionDisabled}
+                >
+                  {tertiaryActionText}
+                </Button>
+              )}
+            </>
           )}
         </div>
       </div>

@@ -23,10 +23,10 @@ export default function PaymentSuccessPendingApprovalPage() {
         description="Your payment has been processed successfully. Your request to join the event is now pending approval from the organizer."
         icon={<CheckCircle2 className="h-10 w-10 text-green-500" />}
         iconColor="green"
-        primaryActionText="View Dashboard"
-        primaryActionHref="/dashboard"
-        secondaryActionText="Browse Events"
-        secondaryActionHref="/events"
+        primaryActionText="Browse Events"
+        primaryActionHref="/events"
+        secondaryActionText="View Dashboard"
+        secondaryActionHref="/dashboard"
         additionalContent={
           <div className="space-y-4">
             <Alert className="bg-amber-50 border-amber-200">
