@@ -4,7 +4,6 @@ import type React from "react";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -35,6 +34,12 @@ interface StatusPageProps {
     venue: string;
     is_virtual: boolean;
   };
+  paymentData?: {
+    amount: number;
+    status: string;
+    paid_at: string;
+    transaction_id: string;
+  };
   token?: string | null;
   showToken?: boolean;
 }
@@ -53,22 +58,11 @@ export default function StatusPage({
   tertiaryActionHref,
   additionalContent,
   eventData,
+  paymentData,
   token,
   showToken = false,
 }: StatusPageProps) {
-  const searchParams = useSearchParams();
   const [isVisible, setIsVisible] = useState(false);
-
-  // Mock payment data
-  const paymentData = {
-    id: searchParams.get("paymentId") || "pay-9876543210",
-    amount: searchParams.get("amount")
-      ? Number.parseFloat(searchParams.get("amount") as string)
-      : 99.99,
-    date: new Date(),
-    method: searchParams.get("paymentMethod") || "Credit Card",
-    last4: searchParams.get("last4") || "4242",
-  };
 
   // Animation effect
   useEffect(() => {
@@ -166,18 +160,24 @@ export default function StatusPage({
                     <span className="text-muted-foreground">
                       Transaction ID
                     </span>
-                    <span className="font-medium">{paymentData.id}</span>
+                    <span className="font-medium">
+                      {paymentData?.transaction_id}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Amount</span>
                     <span className="font-medium">
-                      {formatCurrency(paymentData.amount)}
+                      {paymentData?.amount
+                        ? formatCurrency(paymentData?.amount)
+                        : "N/A"}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Date</span>
                     <span className="font-medium">
-                      {paymentData.date.toLocaleDateString()}
+                      {paymentData?.paid_at
+                        ? formatDate(paymentData?.paid_at)
+                        : "N/A"}
                     </span>
                   </div>
                 </div>

@@ -17,8 +17,6 @@ export default function JoinSuccessPage() {
     }
   );
 
-  console.log(participant);
-
   return (
     <>
       <OverlayLoading isLoading={isLoading} />
