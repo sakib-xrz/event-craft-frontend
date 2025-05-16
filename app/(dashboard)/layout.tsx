@@ -14,18 +14,10 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
-  SidebarMenuSubButton,
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,11 +31,7 @@ import {
   Bell,
   Mail,
   Star,
-  Plus,
   LayoutDashboard,
-  Users,
-  List,
-  ChevronDown,
   User,
 } from "lucide-react";
 import { useCurrentUser } from "@/redux/features/auth/authSlice";
@@ -100,62 +88,18 @@ export default function DashboardLayout({
                 </SidebarMenuButton>
               </SidebarMenuItem>
 
-              <Collapsible
-                defaultOpen={pathname.includes("/dashboard/events")}
-                className="group/collapsible"
-              >
-                <SidebarMenuItem>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuButton size="lg">
-                      <Calendar className="h-4 w-4" />
-                      <span>My Events</span>
-                      <ChevronDown className="ml-auto h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180" />
-                    </SidebarMenuButton>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent>
-                    <SidebarMenuSub>
-                      <SidebarMenuSubItem>
-                        <SidebarMenuSubButton
-                          asChild
-                          isActive={pathname === "/dashboard/events"}
-                          size="md"
-                        >
-                          <Link href="/dashboard/events">
-                            <List className="h-4 w-4" />
-                            <span>All Events</span>
-                          </Link>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                      <SidebarMenuSubItem>
-                        <SidebarMenuSubButton
-                          asChild
-                          isActive={pathname === "/dashboard/events/create"}
-                          size="md"
-                        >
-                          <Link href="/dashboard/events/create">
-                            <Plus className="h-4 w-4" />
-                            <span>Create Event</span>
-                          </Link>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                      <SidebarMenuSubItem>
-                        <SidebarMenuSubButton
-                          asChild
-                          isActive={pathname.includes(
-                            "/dashboard/events/manage-participants"
-                          )}
-                          size="md"
-                        >
-                          <Link href="/dashboard/events/manage-participants">
-                            <Users className="h-4 w-4" />
-                            <span>Manage Participants</span>
-                          </Link>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                    </SidebarMenuSub>
-                  </CollapsibleContent>
-                </SidebarMenuItem>
-              </Collapsible>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === "/dashboard/events"}
+                  size="lg"
+                >
+                  <Link href="/dashboard/events">
+                    <Calendar className="h-4 w-4" />
+                    <span>My Events</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
 
               <SidebarMenuItem>
                 <SidebarMenuButton

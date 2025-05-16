@@ -255,12 +255,7 @@ function EventCard({ event }: { event: IEvent }) {
             </div>
 
             <div>
-              <Link
-                href={`/dashboard/events/${event.id}`}
-                className="text-xl font-semibold hover:underline"
-              >
-                {event.title}
-              </Link>
+              <h3 className="text-xl font-semibold">{event.title}</h3>
               <p className="text-muted-foreground mt-1">{event.description}</p>
             </div>
 
