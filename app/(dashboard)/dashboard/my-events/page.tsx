@@ -333,23 +333,15 @@ function EventCard({ event }: { event: IEvent }) {
                         Edit Event
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link
-                        href={`/dashboard/events/manage-participants?eventId=${event.id}`}
-                      >
-                        <Users className="h-4 w-4 mr-2" />
-                        Manage Participants
-                      </Link>
-                    </DropdownMenuItem>
                     <DropdownMenuItem className="text-destructive focus:text-destructive">
                       <Trash2 className="h-4 w-4 mr-2" />
-                      Delete
+                      Delete Event
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
               <Link
-                href={`/dashboard/events/manage-participants?eventId=${event.id}`}
+                href={`/dashboard/my-events/manage-participants?eventId=${event.id}`}
               >
                 <Button className="w-full gap-1">
                   <Users className="h-4 w-4" />

@@ -260,7 +260,7 @@ export default function ManageParticipantsPage() {
         <div>
           <div className="mb-2">
             <Link
-              href="/dashboard/events"
+              href="/dashboard/my-events"
               className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
