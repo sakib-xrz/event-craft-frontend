@@ -3,6 +3,12 @@ export enum Role {
   ADMIN = "ADMIN",
 }
 
+export enum EventStatus {
+  UPCOMING = "UPCOMING",
+  COMPLETED = "COMPLETED",
+  CANCELLED = "CANCELLED",
+}
+
 export enum PaymentStatus {
   PENDING = "PENDING",
   PAID = "PAID",
@@ -45,6 +51,7 @@ export interface IEvent {
   is_paid: boolean;
   is_virtual: boolean;
   registration_fee: number;
+  status?: EventStatus;
   organizer: {
     full_name: string;
   };

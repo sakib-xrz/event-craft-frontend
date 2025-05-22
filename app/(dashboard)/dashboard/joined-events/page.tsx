@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,7 +9,6 @@ import {
   Calendar,
   Clock,
   MapPin,
-  Users,
   Search,
   Filter,
   Star,
@@ -20,90 +19,53 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { formatDate, formatTime } from "@/lib/formatters";
-import { cn } from "@/lib/utils";
+import { cn, sanitizeParams } from "@/lib/utils";
 import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DropdownMenu } from "@/components/ui/dropdown-menu";
-
-// Mock data for joined events
-const joinedEvents = [
-  {
-    id: "1",
-    title: "Tech Conference 2025",
-    description:
-      "Join us for the biggest tech conference of the year featuring industry leaders and innovative workshops.",
-    date_time: "2025-06-15T09:00:00",
-    venue: "Tech Convention Center, San Francisco",
-    is_public: true,
-    is_paid: true,
-    is_virtual: false,
-    registration_fee: 199.99,
-    join_date: "2025-05-01T14:30:00",
-    organizer: {
-      id: "org1",
-      full_name: "Tech Events Inc.",
-    },
-    participants_count: 87,
-    has_reviewed: false,
-  },
-  {
-    id: "2",
-    title: "Web Development Workshop",
-    description: "Learn the latest web development techniques and tools.",
-    date_time: new Date("2025-05-20T10:00:00"),
-    venue: "Online",
-    is_public: true,
-    is_paid: false,
-    is_virtual: true,
-    registration_fee: 0,
-    join_date: "2025-05-05T09:15:00",
-    organizer: {
-      id: "org2",
-      full_name: "Web Dev Academy",
-    },
-    participants_count: 42,
-    has_reviewed: false,
-  },
-  {
-    id: "3",
-    title: "Digital Marketing Seminar",
-    description: "Explore the latest digital marketing strategies and tools.",
-    date_time: "2025-04-10T14:00:00",
-    venue: "Business Center, New York",
-    is_public: true,
-    is_paid: true,
-    is_virtual: false,
-    registration_fee: 149.99,
-    join_date: "2025-03-20T11:45:00",
-    organizer: {
-      id: "org3",
-      full_name: "Marketing Pros",
-    },
-    participants_count: 65,
-    has_reviewed: true,
-  },
-];
+import { useGetJoinedEventsQuery } from "@/redux/features/event/eventApi";
+import { IEvent } from "@/lib/types";
 
 export default function JoinedEventsPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [timeFilter, setTimeFilter] = useState("all");
-  const currentDate = new Date();
+  const [timeFilter, setTimeFilter] = useState("All Events");
 
-  // Filter events based on search query and time filter
-  const filteredEvents = joinedEvents.filter((event) => {
-    const matchesSearch = event.title
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    const eventDate = new Date(event.date_time);
-    const matchesTime =
-      timeFilter === "all" ||
-      (timeFilter === "upcoming" && eventDate > currentDate) ||
-      (timeFilter === "past" && eventDate < currentDate);
-    return matchesSearch && matchesTime;
+  // Setup params for API request
+  const [params, setParams] = useState({
+    page: 1,
+    limit: 10,
+    search: "",
+    status: "",
   });
+
+  // Update search params when searchQuery changes
+  useEffect(() => {
+    setParams((prev) => ({ ...prev, search: searchQuery }));
+  }, [searchQuery]);
+
+  // Update status filter when timeFilter changes
+  useEffect(() => {
+    const status =
+      timeFilter === "Upcoming"
+        ? "UPCOMING"
+        : timeFilter === "Completed"
+          ? "COMPLETED"
+          : timeFilter === "Cancelled"
+            ? "CANCELLED"
+            : "";
+    setParams((prev) => ({ ...prev, status }));
+  }, [timeFilter]);
+
+  // Fetch joined events data using the hook
+  const { data: joinedEventsData, isLoading } = useGetJoinedEventsQuery(
+    sanitizeParams(params)
+  );
+
+  // Extract events from the response
+  const events = joinedEventsData?.data || [];
 
   return (
     <div className="space-y-6">
@@ -117,7 +79,7 @@ export default function JoinedEventsPage() {
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-        <div className="relative flex-1">
+        <div className="relative flex-1 w-full">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Search events..."
@@ -128,32 +90,54 @@ export default function JoinedEventsPage() {
         </div>
 
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger asChild className="w-fit sm:w-48">
             <Button variant="outline" className="gap-1">
               <Filter className="h-4 w-4" />
-              {timeFilter === "all" ? "All Events" : timeFilter}
+              {timeFilter === "All Events" ? "All Events" : timeFilter}
               <ChevronDown className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => setTimeFilter("all")}>
+          <DropdownMenuContent align="end" className="w-fit sm:w-48">
+            <DropdownMenuItem onClick={() => setTimeFilter("All Events")}>
               All Events
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setTimeFilter("upcoming")}>
+            <DropdownMenuItem onClick={() => setTimeFilter("Upcoming")}>
               Upcoming
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setTimeFilter("past")}>
-              Past
+            <DropdownMenuItem onClick={() => setTimeFilter("Completed")}>
+              Completed
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setTimeFilter("Cancelled")}>
+              Cancelled
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
 
-      {filteredEvents.length > 0 ? (
+      {isLoading ? (
         <div className="space-y-4">
-          {filteredEvents.map((event) => {
-            const eventDate = new Date(event.date_time);
-            const isPast = eventDate < currentDate;
+          {Array.from({ length: 3 }).map((_, index) => (
+            <Card key={index} className="overflow-hidden">
+              <CardContent className="p-6">
+                <div className="flex justify-between items-center">
+                  <div className="w-3/4 space-y-4">
+                    <div className="h-4 bg-muted rounded w-1/4"></div>
+                    <div className="h-6 bg-muted rounded w-2/3"></div>
+                    <div className="h-4 bg-muted rounded w-1/2"></div>
+                  </div>
+                  <div className="flex gap-2">
+                    <div className="h-8 bg-muted rounded w-20"></div>
+                    <div className="h-8 bg-muted rounded w-20"></div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : events.length > 0 ? (
+        <div className="space-y-4">
+          {events.map((event: IEvent) => {
+            const isPast = event.status === "COMPLETED";
             return (
               <Card key={event.id} className="overflow-hidden">
                 <div className="relative">
@@ -197,16 +181,13 @@ export default function JoinedEventsPage() {
                               ? `$${event.registration_fee}`
                               : "Free"}
                           </Badge>
-                          <Badge
-                            variant={isPast ? "secondary" : "default"}
-                            className="ml-auto md:ml-0"
-                          >
+                          <Badge variant={isPast ? "secondary" : "default"}>
                             {isPast ? (
                               <CalendarX className="h-3 w-3 mr-1" />
                             ) : (
                               <CalendarCheck className="h-3 w-3 mr-1" />
                             )}
-                            {isPast ? "Past" : "Upcoming"}
+                            {event.status}
                           </Badge>
                         </div>
 
@@ -215,35 +196,28 @@ export default function JoinedEventsPage() {
                             {event.title}
                           </h3>
                           <p className="text-sm text-muted-foreground mt-1">
-                            Organized by {event.organizer.full_name}
+                            {event.organizer?.full_name &&
+                              `Organized by ${event.organizer.full_name}`}
                           </p>
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-sm">
                           <div className="flex items-center gap-2">
                             <Calendar className="h-4 w-4 text-primary" />
-                            <span>{formatDate(event.date_time as string)}</span>
+                            <span>{formatDate(event.date_time)}</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <Clock className="h-4 w-4 text-primary" />
-                            <span>{formatTime(event.date_time as string)}</span>
+                            <span>{formatTime(event.date_time)}</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <MapPin className="h-4 w-4 text-primary" />
                             <span className="truncate">
-                              {event.venue || "Online"}
+                              {event.is_virtual
+                                ? "Online"
+                                : event.venue || "Online"}
                             </span>
                           </div>
-                        </div>
-
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-1">
-                            <Users className="h-4 w-4" />
-                            <span>{event.participants_count} participants</span>
-                          </div>
-                          <span>
-                            Joined on {formatDate(event.join_date as string)}
-                          </span>
                         </div>
                       </div>
 
@@ -254,7 +228,7 @@ export default function JoinedEventsPage() {
                             View
                           </Button>
                         </Link>
-                        {isPast && !event.has_reviewed && (
+                        {isPast && (
                           <Button size="sm" className="gap-1">
                             <Star className="h-3.5 w-3.5" />
                             Review

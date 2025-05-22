@@ -10,6 +10,20 @@ export const eventApi = baseApi.injectEndpoints({
       }),
       providesTags: [tagTypes.event],
     }),
+    getJoinedEvents: builder.query({
+      query: (params) => ({
+        url: "/events/joined",
+        params,
+      }),
+      providesTags: [tagTypes.event],
+    }),
+    getRequestedEvents: builder.query({
+      query: (params) => ({
+        url: "/events/requested",
+        params,
+      }),
+      providesTags: [tagTypes.event],
+    }),
     getFeaturedEvent: builder.query({
       query: () => "/events/featured",
       providesTags: [tagTypes.event],
@@ -30,6 +44,8 @@ export const eventApi = baseApi.injectEndpoints({
 
 export const {
   useGetEventsQuery,
+  useGetJoinedEventsQuery,
+  useGetRequestedEventsQuery,
   useGetFeaturedEventQuery,
   useGetEventByIdQuery,
   useJoinEventMutation,
